@@ -16,7 +16,7 @@ function App() {
     });
   };
 
-  const [editorMode, setEditorMode] = useState<EditorMode>(EditorMode.Add);
+  const [editorMode, setEditorMode] = useState<EditorMode>(EditorMode.Draw);
 
   useEffect(() => {
     updateCanvasSize();

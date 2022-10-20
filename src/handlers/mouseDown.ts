@@ -12,7 +12,7 @@ export default function mouseDown(
   addPolygon: (polygon: Polygon) => void
 ): boolean {
   switch (editorMode) {
-    case EditorMode.Add:
+    case EditorMode.Draw:
       return addMode();
     case EditorMode.Move:
       return moveMode();
@@ -66,16 +66,21 @@ export default function mouseDown(
     const resultLines = findHoveredLines(polygons, mousePoint);
     const resultPoints = findHoveredPoints(polygons, mousePoint);
 
-    let hoveredElement:
-      | HoveredElement<Line>
-      | HoveredElement<Point>
-      | undefined;
-    if (resultPoints.length > 0) drawState.draggedPoint = resultPoints[0];
-    else if (resultLines.length > 0) {
+    if (resultPoints.length > 0) {
+      drawState.draggedPoint = resultPoints[0];
+      drawState.draggedPoint.element.hover = true;
+    } else if (resultLines.length > 0) {
       drawState.draggedLine = resultLines[0];
-      drawState.lineDragStart = mousePoint;
+      drawState.draggedLine.element.hover = true;
+      drawState.dragStart = mousePoint;
     }
-    if (!hoveredElement) return true;
+    if (!drawState.draggedPoint && !drawState.draggedLine) return true;
+
+    if (drawState.isShiftPressed) {
+      drawState.dragStart = mousePoint;
+      drawState.isDraggingPolygon = true;
+      (drawState.draggedLine || drawState.draggedPoint)!.polygon.highlightAll();
+    }
 
     return true;
   }

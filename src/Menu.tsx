@@ -22,13 +22,21 @@ const ModeButton = ({ text, mode }: ModeButtonProps) => {
 };
 
 function Menu() {
+  const { editorMode } = useContext(AppContext);
+
   return (
     <div className='menu'>
       <div className='menu-section'>
         <h3>Narzędzia</h3>
         <div className='buttons'>
-          <ModeButton text='Dodawanie' mode={EditorMode.Add} />
+          <ModeButton text='Rysowanie' mode={EditorMode.Draw} />
           <ModeButton text='Przesuwanie' mode={EditorMode.Move} />
+          {editorMode === EditorMode.Move && (
+            <div className='menu-caption'>
+              Przytrzymaj <span className='key'>SHIFT</span>, aby przesunąć cały
+              wielokąt
+            </div>
+          )}
           <ModeButton text='Usuwanie' mode={EditorMode.Delete} />
         </div>
       </div>

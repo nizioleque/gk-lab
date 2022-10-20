@@ -7,7 +7,7 @@ interface AppContext {
 }
 
 const appContextDefaultValue: AppContext = {
-  editorMode: EditorMode.Add,
+  editorMode: EditorMode.Draw,
   setEditorMode: () => {},
 };
 

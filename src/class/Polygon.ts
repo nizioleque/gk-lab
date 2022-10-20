@@ -13,5 +13,10 @@ export default class Polygon {
     }
   }
 
-  
+  highlightAll(): void {
+    for (const line of this.lines) {
+      line.hover = true;
+      line.points[0].hover = true;
+    }
+  }
 }

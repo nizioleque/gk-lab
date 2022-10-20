@@ -8,13 +8,17 @@ export interface DrawState {
   drawingLine?: Line;
   drawingStart?: Point;
   polygonStart?: Point;
+
   draggedPoint?: HoveredElement<Point>;
   draggedLine?: HoveredElement<Line>;
-  lineDragStart?: Point;
+  dragStart?: Point;
+
+  isShiftPressed?: boolean;
+  isDraggingPolygon?: boolean;
 }
 
 export enum EditorMode {
-  Add,
+  Draw,
   Move,
   Delete,
 }

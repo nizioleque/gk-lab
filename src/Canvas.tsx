@@ -22,6 +22,22 @@ function Canvas({ size }: CanvasProps) {
 
   const drawState: DrawState = {};
 
+  useEffect(() => {
+    function setShiftPressed(event: KeyboardEvent) {
+      if (event.shiftKey) drawState.isShiftPressed = true;
+      console.log('keyboard event');
+    }
+    function resetShiftPressed() {
+      drawState.isShiftPressed = false;
+    }
+    document.addEventListener('keydown', setShiftPressed);
+    document.addEventListener('keyup', resetShiftPressed);
+    return () => {
+      document.removeEventListener('keydown', setShiftPressed);
+      document.removeEventListener('keyup', resetShiftPressed);
+    };
+  }, [drawState]);
+
   const [polygons, _setPolygons] = useState<Polygon[]>([]);
   const addPolygon = (polygon: Polygon) => _setPolygons([...polygons, polygon]);
 

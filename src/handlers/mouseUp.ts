@@ -9,7 +9,7 @@ export default function mouseUp(
   drawState: DrawState
 ): boolean {
   switch (editorMode) {
-    case EditorMode.Add:
+    case EditorMode.Draw:
       return addMode();
     case EditorMode.Move:
       return moveMode();
@@ -24,7 +24,8 @@ export default function mouseUp(
   function moveMode() {
     drawState.draggedPoint = undefined;
     drawState.draggedLine = undefined;
-    drawState.lineDragStart = undefined;
+    drawState.dragStart = undefined;
+    drawState.isDraggingPolygon = undefined;
     return true;
   }
 
