@@ -1,6 +1,7 @@
 import Line from './class/Line';
 import Point from './class/Point';
 import Polygon from './class/Polygon';
+import { DrawState } from './types';
 
 export const randomColor = () =>
   `rgba(${Math.floor(Math.random() * 156) + 100}, ${
@@ -26,4 +27,10 @@ export const findHoveredElements = (
   }
 
   return result;
+};
+
+export const canClosePolygon = (drawState: DrawState): boolean => {
+  if (!drawState.currentPolygon) return false;
+  if (drawState.currentPolygon.lines.length <= 1) return false;
+  return true;
 };

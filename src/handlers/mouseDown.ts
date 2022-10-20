@@ -2,6 +2,7 @@ import Line from '../class/Line';
 import Point from '../class/Point';
 import Polygon from '../class/Polygon';
 import { DrawState, EditorMode } from '../types';
+import { canClosePolygon } from '../utils';
 
 export default function mouseDown(
   editorMode: EditorMode,
@@ -29,8 +30,10 @@ export default function mouseDown(
       );
     } else {
       // Polygon is being drawn
-
-      if (drawState.polygonStart?.isAt(mousePoint)) {
+      if (
+        canClosePolygon(drawState) &&
+        drawState.polygonStart?.isAt(mousePoint)
+      ) {
         // Finish current polygon
         drawState.drawingLine!.points[1] = drawState.polygonStart;
         drawState.currentPolygon!.lines.push(drawState.drawingLine!);

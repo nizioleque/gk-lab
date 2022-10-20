@@ -1,5 +1,6 @@
 import Point from '../class/Point';
 import { DrawState, EditorMode } from '../types';
+import { canClosePolygon } from '../utils';
 
 export default function mouseMove(
   editorMode: EditorMode,
@@ -18,7 +19,8 @@ export default function mouseMove(
   function addMode() {
     if (!drawState.drawingStart) return false;
     drawState.drawingLine!.points[1] = mousePoint;
-    drawState.polygonStart?.isAt(mousePoint, true);
+    if (canClosePolygon(drawState))
+      drawState.polygonStart?.isAt(mousePoint, true);
     return true;
   }
 
