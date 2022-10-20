@@ -1,14 +1,13 @@
 import Canvas from './Canvas';
 import './App.css';
-import { useEffect, useRef, useState } from 'react';
+import { createContext, useEffect, useRef, useState } from 'react';
 import Menu from './Menu';
+import { EditorMode } from './types';
+import { AppContext } from './AppContext';
 
 function App() {
-  console.log('rendered app');
-
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
-
   const updateCanvasSize = () => {
     if (!canvasContainerRef.current) return;
     setCanvasSize({
@@ -16,6 +15,8 @@ function App() {
       height: canvasContainerRef.current.offsetHeight,
     });
   };
+
+  const [editorMode, setEditorMode] = useState<EditorMode>(EditorMode.Add);
 
   useEffect(() => {
     updateCanvasSize();
@@ -27,12 +28,19 @@ function App() {
   }, []);
 
   return (
-    <div className='App'>
-      <Menu />
-      <div className='canvas-container' ref={canvasContainerRef}>
-        <Canvas size={canvasSize} />
+    <AppContext.Provider
+      value={{
+        editorMode,
+        setEditorMode,
+      }}
+    >
+      <div className='App'>
+        <Menu />
+        <div className='canvas-container' ref={canvasContainerRef}>
+          <Canvas size={canvasSize} />
+        </div>
       </div>
-    </div>
+    </AppContext.Provider>
   );
 }
 

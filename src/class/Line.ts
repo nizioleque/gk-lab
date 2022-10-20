@@ -15,14 +15,7 @@ export default class Line {
     this.points = [lPt, rPt];
     this.a = (rPt.y - lPt.y) / (rPt.x - lPt.x);
     this.b = rPt.y - lPt.x * this.a;
-    console.log(point1, point2, lPt, rPt, this.a, this.b);
   }
-
-  // constructor(x1: number, y1: number, x2: number, y2: number) {
-  //   const point1 = new Point(x1, y1);
-  //   const point2 = new Point(x2, y2);
-  //   this.points = [point1, point2];
-  // }
 
   draw(ctx: CanvasRenderingContext2D): void {
     if (this.hover) ctx.strokeStyle = 'red';
@@ -43,7 +36,6 @@ export default class Line {
     if (mousePoint.x > this.points[1].x + hoverOffset) return false;
     const expectedY = this.a * mousePoint.x + this.b;
     if (Math.abs(mousePoint.y - expectedY) > hoverOffset) return false;
-    // console.log('AAAAAAAAAAA');
     return true;
   }
 }

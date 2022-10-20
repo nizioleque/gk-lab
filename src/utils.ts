@@ -21,12 +21,9 @@ export const findHoveredElements = (
 
   for (const polygon of polygons) {
     for (const line of polygon.lines) {
-      console.log('checking line:', line);
       if (line.isAt(mousePoint)) result.lines.push(line);
     }
   }
-
-  console.log(result);
 
   return result;
 };

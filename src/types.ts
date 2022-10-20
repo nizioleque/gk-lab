@@ -8,3 +8,9 @@ export interface DrawState {
   drawingStart: Point | undefined;
   polygonStart: Point | undefined;
 }
+
+export enum EditorMode {
+  Add,
+  Move,
+  Delete,
+}

@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState, MouseEvent } from 'react';
+import { useEffect, useRef, useState, MouseEvent, useContext } from 'react';
+import { AppContext } from './AppContext';
 import Point from './class/Point';
 import Polygon from './class/Polygon';
 import mouseDown from './handlers/mouseDown';
@@ -12,13 +13,12 @@ interface CanvasProps {
 
 function Canvas({ size }: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { editorMode } = useContext(AppContext);
   const ctx = () => canvasRef.current?.getContext('2d')!;
   const getMousePosition = (event: MouseEvent): Point => {
     const rect = canvasRef.current?.getBoundingClientRect()!;
     return new Point(event.clientX - rect.left, event.clientY - rect.top);
   };
-
-  console.log('canvas rendered');
 
   const drawState: DrawState = {
     currentPolygon: undefined,
@@ -30,7 +30,7 @@ function Canvas({ size }: CanvasProps) {
   const [polygons, _setPolygons] = useState<Polygon[]>([]);
   const addPolygon = (polygon: Polygon) => _setPolygons([...polygons, polygon]);
 
-  useEffect(() => draw(), [size]);
+  useEffect(() => draw(), [size, polygons]);
 
   // Draw
   const draw = () => _draw(ctx());
@@ -44,20 +44,20 @@ function Canvas({ size }: CanvasProps) {
   // Event handlers
   const handleMouseMove = (event: MouseEvent) => {
     const mousePoint = getMousePosition(event);
-    mouseMove(mousePoint, drawState);
-    draw();
+    const redraw = mouseMove(editorMode, mousePoint, drawState);
+    if (redraw) draw();
   };
 
   const handleMouseDown = (event: MouseEvent) => {
     const mousePoint = getMousePosition(event);
-    mouseDown(mousePoint, drawState, addPolygon);
-    draw();
+    const redraw = mouseDown(editorMode, mousePoint, drawState, addPolygon);
+    if (redraw) draw();
   };
 
   const handleMouseUp = (event: MouseEvent) => {
     const mousePoint = getMousePosition(event);
-    mouseUp(mousePoint, drawState);
-    draw();
+    const redraw = mouseUp(editorMode, mousePoint, drawState);
+    if (redraw) draw();
   };
 
   return (
