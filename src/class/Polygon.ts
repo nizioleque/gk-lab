@@ -12,4 +12,6 @@ export default class Polygon {
       line.draw(ctx);
     }
   }
+
+  
 }
