@@ -1,5 +1,7 @@
+import Line from '../class/Line';
 import Point from '../class/Point';
-import { DrawState, EditorMode } from '../types';
+import { DrawState, EditorMode, HoveredElement } from '../types';
+import { findHoveredLines, findHoveredPoints } from '../utils';
 
 export default function mouseUp(
   editorMode: EditorMode,
@@ -20,7 +22,10 @@ export default function mouseUp(
   }
 
   function moveMode() {
-    return false;
+    drawState.draggedPoint = undefined;
+    drawState.draggedLine = undefined;
+    drawState.lineDragStart = undefined;
+    return true;
   }
 
   function deleteMode() {

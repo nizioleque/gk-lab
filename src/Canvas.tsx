@@ -20,12 +20,7 @@ function Canvas({ size }: CanvasProps) {
     return new Point(event.clientX - rect.left, event.clientY - rect.top);
   };
 
-  const drawState: DrawState = {
-    currentPolygon: undefined,
-    drawingLine: undefined,
-    drawingStart: undefined,
-    polygonStart: undefined,
-  };
+  const drawState: DrawState = {};
 
   const [polygons, _setPolygons] = useState<Polygon[]>([]);
   const addPolygon = (polygon: Polygon) => _setPolygons([...polygons, polygon]);
@@ -44,13 +39,19 @@ function Canvas({ size }: CanvasProps) {
   // Event handlers
   const handleMouseMove = (event: MouseEvent) => {
     const mousePoint = getMousePosition(event);
-    const redraw = mouseMove(editorMode, mousePoint, drawState);
+    const redraw = mouseMove(editorMode, mousePoint, drawState, polygons);
     if (redraw) draw();
   };
 
   const handleMouseDown = (event: MouseEvent) => {
     const mousePoint = getMousePosition(event);
-    const redraw = mouseDown(editorMode, mousePoint, drawState, addPolygon);
+    const redraw = mouseDown(
+      editorMode,
+      mousePoint,
+      drawState,
+      polygons,
+      addPolygon
+    );
     if (redraw) draw();
   };
 

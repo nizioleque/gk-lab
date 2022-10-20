@@ -1,13 +1,14 @@
 import Line from '../class/Line';
 import Point from '../class/Point';
 import Polygon from '../class/Polygon';
-import { DrawState, EditorMode } from '../types';
-import { canClosePolygon } from '../utils';
+import { DrawState, EditorMode, HoveredElement } from '../types';
+import { canClosePolygon, findHoveredLines, findHoveredPoints } from '../utils';
 
 export default function mouseDown(
   editorMode: EditorMode,
   mousePoint: Point,
   drawState: DrawState,
+  polygons: Polygon[],
   addPolygon: (polygon: Polygon) => void
 ): boolean {
   switch (editorMode) {
@@ -35,7 +36,7 @@ export default function mouseDown(
         drawState.polygonStart?.isAt(mousePoint)
       ) {
         // Finish current polygon
-        drawState.drawingLine!.points[1] = drawState.polygonStart;
+        drawState.drawingLine!.setEnd(drawState.polygonStart);
         drawState.currentPolygon!.lines.push(drawState.drawingLine!);
         addPolygon(drawState.currentPolygon!);
 
@@ -49,7 +50,7 @@ export default function mouseDown(
         if (!drawState.currentPolygon) {
           drawState.currentPolygon = new Polygon([]);
         }
-        drawState.drawingLine!.points[1] = mousePoint;
+        drawState.drawingLine!.setEnd(mousePoint);
         drawState.currentPolygon.lines.push(drawState.drawingLine!);
         drawState.drawingStart = mousePoint;
         drawState.drawingLine = new Line(
@@ -62,7 +63,21 @@ export default function mouseDown(
   }
 
   function moveMode() {
-    return false;
+    const resultLines = findHoveredLines(polygons, mousePoint);
+    const resultPoints = findHoveredPoints(polygons, mousePoint);
+
+    let hoveredElement:
+      | HoveredElement<Line>
+      | HoveredElement<Point>
+      | undefined;
+    if (resultPoints.length > 0) drawState.draggedPoint = resultPoints[0];
+    else if (resultLines.length > 0) {
+      drawState.draggedLine = resultLines[0];
+      drawState.lineDragStart = mousePoint;
+    }
+    if (!hoveredElement) return true;
+
+    return true;
   }
 
   function deleteMode() {

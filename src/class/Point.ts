@@ -1,7 +1,10 @@
-const pointRadius = 5;
-const hoverOffset = Math.pow(20, 2);
+import { distSq } from '../utils';
+import Element from './Element';
 
-export default class Point {
+const pointRadius = 6;
+const hoverOffset = Math.pow(10, 2);
+
+export default class Point implements Element {
   x: number;
   y: number;
   hover: boolean = false;
@@ -20,9 +23,8 @@ export default class Point {
   }
 
   isAt(mousePoint: Point, highlight: boolean = false): boolean {
-    const distSq =
-      Math.pow(mousePoint.y - this.y, 2) + Math.pow(mousePoint.x - this.x, 2);
-    const result = distSq < hoverOffset;
+    const distance = distSq(new Point(this.x, this.y), mousePoint);
+    const result = distance < hoverOffset;
     this.hover = result && highlight;
     return result;
   }
