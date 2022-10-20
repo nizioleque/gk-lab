@@ -1,6 +1,7 @@
 import Canvas from './Canvas';
 import './App.css';
 import { useEffect, useRef, useState } from 'react';
+import Menu from './Menu';
 
 function App() {
   console.log('rendered app');
@@ -9,14 +10,7 @@ function App() {
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
 
   const updateCanvasSize = () => {
-    if (!canvasContainerRef.current) {
-      console.error('canvas ref is undefined');
-      return;
-    }
-    console.log('update canvas size to', {
-      width: canvasContainerRef.current.offsetWidth,
-      height: canvasContainerRef.current.offsetHeight,
-    });
+    if (!canvasContainerRef.current) return;
     setCanvasSize({
       width: canvasContainerRef.current.offsetWidth,
       height: canvasContainerRef.current.offsetHeight,
@@ -34,9 +28,7 @@ function App() {
 
   return (
     <div className='App'>
-      <div className='menu'>
-        <h1>Menu</h1>
-      </div>
+      <Menu />
       <div className='canvas-container' ref={canvasContainerRef}>
         <Canvas size={canvasSize} />
       </div>
