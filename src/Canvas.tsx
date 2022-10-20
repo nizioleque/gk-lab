@@ -1,8 +1,10 @@
-import { useEffect, useRef, useState, MouseEvent, useCallback } from 'react';
-import Line from './class/Line';
+import { useEffect, useRef, useState, MouseEvent } from 'react';
 import Point from './class/Point';
 import Polygon from './class/Polygon';
-import { findHoveredElements } from './utils';
+import mouseDown from './handlers/mouseDown';
+import mouseMove from './handlers/mouseMove';
+import mouseUp from './handlers/mouseUp';
+import { DrawState } from './types';
 
 interface CanvasProps {
   size: { width: number; height: number };
@@ -18,87 +20,43 @@ function Canvas({ size }: CanvasProps) {
 
   console.log('canvas rendered');
 
-  let currentPolygon: Polygon | undefined;
-  let drawingLine: Line | undefined;
-  let drawingStart: Point | undefined;
-  let polygonStart: Point | undefined;
-
-  const [polygons, setPolygons] = useState<Polygon[]>([]);
-
-  // Effects
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    draw();
-  }, []);
-
-  useEffect(() => {
-    draw();
-  }, [size]);
-
-  // Draw
-  const draw = () => {
-    _draw(ctx());
+  const drawState: DrawState = {
+    currentPolygon: undefined,
+    drawingLine: undefined,
+    drawingStart: undefined,
+    polygonStart: undefined,
   };
 
-  function _draw(ctx: CanvasRenderingContext2D) {
-    ctx.clearRect(0, 0, size.width, size.height);
+  const [polygons, _setPolygons] = useState<Polygon[]>([]);
+  const addPolygon = (polygon: Polygon) => _setPolygons([...polygons, polygon]);
 
+  useEffect(() => draw(), [size]);
+
+  // Draw
+  const draw = () => _draw(ctx());
+  const _draw = (ctx: CanvasRenderingContext2D) => {
+    ctx.clearRect(0, 0, size.width, size.height);
     for (const polygon of polygons) polygon.draw(ctx);
-    currentPolygon?.draw(ctx);
-    drawingLine?.draw(ctx);
-  }
+    drawState.currentPolygon?.draw(ctx);
+    drawState.drawingLine?.draw(ctx);
+  };
 
   // Event handlers
   const handleMouseMove = (event: MouseEvent) => {
     const mousePoint = getMousePosition(event);
-    if (!drawingStart) return;
-    drawingLine!.points[1] = mousePoint;
-    polygonStart?.isAt(mousePoint, true);
-    // findHoveredElements(polygons, mousePoint);
+    mouseMove(mousePoint, drawState);
     draw();
   };
 
   const handleMouseDown = (event: MouseEvent) => {
     const mousePoint = getMousePosition(event);
-    if (!drawingStart) {
-      // Start new polygon
-      polygonStart = mousePoint;
-      drawingStart = mousePoint;
-      drawingLine = new Line(drawingStart, drawingStart);
-    } else {
-      // Polygon is being drawn
-
-      if (polygonStart?.isAt(mousePoint)) {
-        // Finish current polygon
-        drawingLine!.points[1] = polygonStart;
-        currentPolygon!.lines.push(drawingLine!);
-        setPolygons([...polygons, currentPolygon!]);
-
-        // Reset state
-        currentPolygon = undefined;
-        polygonStart = undefined;
-        drawingLine = undefined;
-        drawingStart = undefined;
-      } else {
-        // Continue current polygon
-        if (!currentPolygon) {
-          currentPolygon = new Polygon([]);
-        }
-        drawingLine!.points[1] = mousePoint;
-        currentPolygon.lines.push(drawingLine!);
-        drawingStart = mousePoint;
-        drawingLine = new Line(drawingStart, drawingStart);
-      }
-    }
-    console.log(currentPolygon);
+    mouseDown(mousePoint, drawState, addPolygon);
     draw();
   };
 
-  const handleMouseUp = () => {
-    // currentStart = undefined;
+  const handleMouseUp = (event: MouseEvent) => {
+    const mousePoint = getMousePosition(event);
+    mouseUp(mousePoint, drawState);
     draw();
   };
 
