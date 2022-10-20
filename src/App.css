@@ -1,0 +1,23 @@
+.App {
+  height: 100%;
+  display: grid;
+  grid: 1fr / 300px 1fr;
+  grid-template-areas: 'menu canvas-container';
+}
+
+.menu {
+  background-color: rgb(156, 240, 240);
+  border-radius: 20px;
+  margin: 15px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.canvas-container {
+  position: relative;
+}
+
+.canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}

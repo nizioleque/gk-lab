@@ -2,21 +2,11 @@ import { useEffect, useRef, useState, MouseEvent } from 'react';
 import Line from './class/Line';
 import Point from './class/Point';
 
-export const randomColor = () =>
-  `rgba(${Math.floor(Math.random() * 156) + 100}, ${
-    Math.floor(Math.random() * 156) + 100
-  }, ${Math.floor(Math.random() * 156) + 100})`;
+interface CanvasProps {
+  size: { width: number; height: number };
+}
 
-const testLines: Line[] = [
-  new Line(0, 0, 50, 50),
-  new Line(20, 20, 0, 200),
-  new Line(20, 80, 100, 70),
-];
-
-const canvasWidth = 500;
-const canvasHeight = 500;
-
-function Canvas() {
+function Canvas({ size }: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const ctx = () => canvasRef.current?.getContext('2d')!;
   const getMousePosition = (event: MouseEvent) => {
@@ -46,7 +36,7 @@ function Canvas() {
   }
 
   function _draw(ctx: CanvasRenderingContext2D) {
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    ctx.clearRect(0, 0, size.width, size.height);
 
     for (const line of testLines) {
       line.draw(ctx);
@@ -78,10 +68,12 @@ function Canvas() {
   return (
     <canvas
       ref={canvasRef}
-      style={{ border: '2px solid black' }}
+      className='canvas'
       onMouseMove={handleMouseMove}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
+      width={size.width}
+      height={size.height}
     />
   );
 }
