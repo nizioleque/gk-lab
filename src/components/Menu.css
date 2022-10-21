@@ -71,3 +71,9 @@ h5 {
   font-variant: small-caps;
   text-transform: lowercase;
 }
+
+.shortcut-key {
+  position: absolute;
+  color: rgb(0, 0, 0, 0.8);
+  border-color: rgb(0, 0, 0, 0.8);
+}

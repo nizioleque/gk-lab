@@ -1,26 +1,9 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../AppContext';
 import './Menu.css';
 import { EditorMode } from '../types';
 import AnimateHeight from 'react-animate-height';
-
-interface ModeButtonProps {
-  text: string;
-  mode: EditorMode;
-}
-
-const ModeButton = ({ text, mode }: ModeButtonProps) => {
-  const { editorMode, setEditorMode } = useContext(AppContext);
-
-  return (
-    <button
-      onClick={() => setEditorMode(mode)}
-      className={editorMode === mode ? 'active' : undefined}
-    >
-      {text}
-    </button>
-  );
-};
+import ModeButton from './ModeButton';
 
 function Menu() {
   const { editorMode } = useContext(AppContext);
