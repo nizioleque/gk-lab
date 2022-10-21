@@ -21,6 +21,11 @@ export default class Line implements Element {
     this.calculateAB();
   }
 
+  setStart(start: Point) {
+    this.points[0] = start;
+    this.calculateAB();
+  }
+
   calculateAB() {
     const [point1, point2] = this.points;
     const lPt = point1.x < point2.x ? point1 : point2;

@@ -39,6 +39,8 @@ function Canvas({ size }: CanvasProps) {
 
   const [polygons, _setPolygons] = useState<Polygon[]>([]);
   const addPolygon = (polygon: Polygon) => _setPolygons([...polygons, polygon]);
+  const removePolygon = (polygon: Polygon) =>
+    _setPolygons(polygons.filter((x) => x !== polygon));
 
   useEffect(() => draw(), [size, polygons]);
 
@@ -84,7 +86,7 @@ function Canvas({ size }: CanvasProps) {
       drawState,
       polygons,
       addPolygon,
-      addPolygon
+      removePolygon,
       setErrorText
     );
     if (redraw) draw();

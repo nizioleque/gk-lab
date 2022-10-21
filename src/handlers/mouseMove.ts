@@ -69,30 +69,14 @@ export default function mouseMove(
       drawState.draggedPoint.element.y = mousePoint.y;
       drawState.draggedPoint.element.hover = true;
     } else {
-      // Highlight draggable element
-      const resultLines = findHoveredLines(polygons, mousePoint);
-      const resultPoints = findHoveredPoints(polygons, mousePoint);
-
-      let hoveredElement:
-        | HoveredElement<Point>
-        | HoveredElement<Line>
-        | undefined;
-      if (resultPoints.length > 0) hoveredElement = resultPoints[0];
-      else if (resultLines.length > 0) hoveredElement = resultLines[0];
-      if (!hoveredElement) return true;
-
-      if (drawState.isShiftPressed) {
-        hoveredElement.polygon.highlightAll();
-      } else {
-      }
-      hoveredElement.element.hover = true;
+      return highlight();
     }
 
     return true;
   }
 
   function deleteMode() {
-    return false;
+    return highlight();
   }
 
   function splitMode() {
@@ -105,5 +89,26 @@ export default function mouseMove(
 
   function setPerpendicularMode() {
     return false;
+  }
+
+  function highlight(allowShift: boolean = true): boolean {
+    // Highlight element element
+    const resultLines = findHoveredLines(polygons, mousePoint);
+    const resultPoints = findHoveredPoints(polygons, mousePoint);
+
+    let hoveredElement:
+      | HoveredElement<Point>
+      | HoveredElement<Line>
+      | undefined;
+    if (resultPoints.length > 0) hoveredElement = resultPoints[0];
+    else if (resultLines.length > 0) hoveredElement = resultLines[0];
+    if (!hoveredElement) return true;
+
+    if (allowShift && drawState.isShiftPressed) {
+      hoveredElement.polygon.highlightAll();
+    } else {
+      hoveredElement.element.hover = true;
+    }
+    return true;
   }
 }

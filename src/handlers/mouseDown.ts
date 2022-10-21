@@ -9,7 +9,9 @@ export default function mouseDown(
   mousePoint: Point,
   drawState: DrawState,
   polygons: Polygon[],
-  addPolygon: (polygon: Polygon) => void
+  addPolygon: (polygon: Polygon) => void,
+  removePolygon: (polygon: Polygon) => void,
+  setErrorText: (text: string) => void
 ): boolean {
   switch (editorMode) {
     case EditorMode.Draw:
@@ -94,7 +96,41 @@ export default function mouseDown(
   }
 
   function deleteMode() {
-    return false;
+    const resultLines = findHoveredLines(polygons, mousePoint);
+    const resultPoints = findHoveredPoints(polygons, mousePoint);
+
+    let hoveredElement:
+      | HoveredElement<Point>
+      | HoveredElement<Line>
+      | undefined;
+    if (resultPoints.length > 0) hoveredElement = resultPoints[0];
+    else if (resultLines.length > 0) hoveredElement = resultLines[0];
+    if (!hoveredElement) return false;
+
+    if (drawState.isShiftPressed) {
+      removePolygon(hoveredElement.polygon);
+      return true;
+    }
+
+    if (hoveredElement.element instanceof Line) {
+      if (hoveredElement.polygon.lines.length <= 3) {
+        setErrorText(
+          'Nie można usunąć krawędzi - ten wielokąt ma za mało krawędzi'
+        );
+        return false;
+      }
+      removeLine(hoveredElement as HoveredElement<Line>);
+    } else {
+      if (hoveredElement.polygon.lines.length <= 3) {
+        setErrorText(
+          'Nie można usunąć wierzchołka - ten wielokąt ma za mało krawędzi'
+        );
+        return false;
+      }
+      removePoint(hoveredElement as HoveredElement<Point>);
+    }
+
+    return true;
   }
 
   function splitMode() {
@@ -107,5 +143,38 @@ export default function mouseDown(
 
   function setPerpendicularMode() {
     return false;
+  }
+
+  function removeLine(hoveredElement: HoveredElement<Line>) {
+    // Connect the next edge to the start of the removed edge
+    const hoveredLine = hoveredElement.element as Line;
+    const nextLine = hoveredElement.polygon.lines.find(
+      (line) => line.points[0] === hoveredLine.points[1]
+    );
+    nextLine?.setStart(hoveredLine.points[0]);
+
+    // Remove the hovered edge
+    hoveredElement.polygon.lines = hoveredElement.polygon.lines.filter(
+      (line) => line !== hoveredLine
+    );
+  }
+
+  function removePoint(hoveredElement: HoveredElement<Point>) {
+    // Find the two adjacent edges
+    const hoveredPoint = hoveredElement.element as Point;
+    const nextLine = hoveredElement.polygon.lines.find(
+      (line) => line.points[0] === hoveredPoint
+    );
+    const prevLine = hoveredElement.polygon.lines.find(
+      (line) => line.points[1] === hoveredPoint
+    );
+
+    // Move the start of the next edge
+    nextLine!.points[0] = prevLine!.points[0];
+
+    // Remove the previous edge
+    hoveredElement.polygon.lines = hoveredElement.polygon.lines.filter(
+      (line) => line !== prevLine
+    );
   }
 }
