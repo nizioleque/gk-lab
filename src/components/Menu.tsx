@@ -37,13 +37,13 @@ function Menu() {
             </div>
           </AnimateHeight>
           <ModeButton text='Podział krawędzi' mode={EditorMode.Split} />
-          <h5>Nowe ograniczenie:</h5>
+          <h5>Nowe ograniczenie</h5>
           <ModeButton text='Długość' mode={EditorMode.SetLength} />
           <ModeButton text='Prostopadłość' mode={EditorMode.SetPerpendicular} />
         </div>
       </div>
       <div className='menu-section'>
-        <h3>Relacje</h3>
+        <h3>Ograniczenia</h3>
       </div>
       <div className='menu-section'>
         <h3>Sceny</h3>

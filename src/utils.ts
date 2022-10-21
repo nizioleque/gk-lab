@@ -1,7 +1,7 @@
 import Line from './class/Line';
 import Point from './class/Point';
 import Polygon from './class/Polygon';
-import { DrawState, HoveredElement } from './types';
+import { DrawState, PolygonWith } from './types';
 
 export const randomColor = () =>
   `rgba(${Math.floor(Math.random() * 156) + 100}, ${
@@ -11,8 +11,8 @@ export const randomColor = () =>
 export const findHoveredLines = (
   polygons: Polygon[],
   mousePoint: Point
-): HoveredElement<Line>[] => {
-  const result: HoveredElement<Line>[] = [];
+): PolygonWith<Line>[] => {
+  const result: PolygonWith<Line>[] = [];
 
   for (const polygon of polygons) {
     for (const line of polygon.lines) {
@@ -26,8 +26,8 @@ export const findHoveredLines = (
 export const findHoveredPoints = (
   polygons: Polygon[],
   mousePoint: Point
-): HoveredElement<Point>[] => {
-  const result: HoveredElement<Point>[] = [];
+): PolygonWith<Point>[] => {
+  const result: PolygonWith<Point>[] = [];
 
   for (const polygon of polygons) {
     for (const line of polygon.lines) {
@@ -49,7 +49,7 @@ export const distSq = (point1: Point, point2: Point): number => {
   return Math.pow(point1.y - point2.y, 2) + Math.pow(point1.x - point2.x, 2);
 };
 
-export function removeLine(hoveredElement: HoveredElement<Line>) {
+export function removeLine(hoveredElement: PolygonWith<Line>) {
   // Connect the next edge to the start of the removed edge
   const hoveredLine = hoveredElement.element as Line;
   const nextLine = hoveredElement.polygon.lines.find(
@@ -63,7 +63,7 @@ export function removeLine(hoveredElement: HoveredElement<Line>) {
   );
 }
 
-export function removePoint(hoveredElement: HoveredElement<Point>) {
+export function removePoint(hoveredElement: PolygonWith<Point>) {
   // Find the two adjacent edges
   const hoveredPoint = hoveredElement.element as Point;
   const nextLine = hoveredElement.polygon.lines.find(
@@ -92,11 +92,11 @@ export function findHoveredElement(
   polygons: Polygon[],
   mousePoint: Point,
   edgeOnly: boolean = false
-): HoveredElement<Point> | HoveredElement<Line> | undefined {
+): PolygonWith<Point> | PolygonWith<Line> | undefined {
   const resultLines = findHoveredLines(polygons, mousePoint);
   const resultPoints = findHoveredPoints(polygons, mousePoint);
 
-  let hoveredElement: HoveredElement<Point> | HoveredElement<Line> | undefined;
+  let hoveredElement: PolygonWith<Point> | PolygonWith<Line> | undefined;
   if (!edgeOnly && resultPoints.length > 0) hoveredElement = resultPoints[0];
   else if (resultLines.length > 0) hoveredElement = resultLines[0];
   return hoveredElement;

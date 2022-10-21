@@ -1,7 +1,7 @@
 import Line from '../class/Line';
 import Point from '../class/Point';
 import Polygon from '../class/Polygon';
-import { DrawState, EditorMode, HoveredElement } from '../types';
+import { DrawState, EditorMode, PolygonWith } from '../types';
 import {
   canClosePolygon,
   findHoveredElement,

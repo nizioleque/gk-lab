@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, MouseEvent, useContext } from 'react';
 import { AppContext } from '../AppContext';
 import Point from '../class/Point';
 import Polygon from '../class/Polygon';
+import RestrictionData from '../class/Restriction';
 import mouseDown from '../handlers/mouseDown';
 import mouseMove from '../handlers/mouseMove';
 import mouseUp from '../handlers/mouseUp';
@@ -43,6 +44,8 @@ function Canvas({ size }: CanvasProps) {
     _setPolygons(polygons.filter((x) => x !== polygon));
 
   useEffect(() => draw(), [size, polygons]);
+
+  const [restrictionData, setRestrictionData] = useState<RestrictionData>(new RestrictionData());
 
   // Error handling
   const [errorText, _setErrorText] = useState<string | undefined>(undefined);

@@ -1,7 +1,7 @@
 import Line from '../class/Line';
 import Point from '../class/Point';
 import Polygon from '../class/Polygon';
-import { DrawState, EditorMode, HoveredElement } from '../types';
+import { DrawState, EditorMode, PolygonWith } from '../types';
 import {
   canClosePolygon,
   findHoveredElement,
@@ -119,7 +119,7 @@ export default function mouseDown(
         );
         return false;
       }
-      removeLine(hoveredElement as HoveredElement<Line>);
+      removeLine(hoveredElement as PolygonWith<Line>);
     } else {
       if (hoveredElement.polygon.lines.length <= 3) {
         setErrorText(
@@ -127,7 +127,7 @@ export default function mouseDown(
         );
         return false;
       }
-      removePoint(hoveredElement as HoveredElement<Point>);
+      removePoint(hoveredElement as PolygonWith<Point>);
     }
 
     return true;

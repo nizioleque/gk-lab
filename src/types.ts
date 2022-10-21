@@ -9,8 +9,8 @@ export interface DrawState {
   drawingStart?: Point;
   polygonStart?: Point;
 
-  draggedPoint?: HoveredElement<Point>;
-  draggedLine?: HoveredElement<Line>;
+  draggedPoint?: PolygonWith<Point>;
+  draggedLine?: PolygonWith<Line>;
   dragStart?: Point;
 
   isShiftPressed?: boolean;
@@ -26,7 +26,7 @@ export enum EditorMode {
   SetPerpendicular,
 }
 
-export interface HoveredElement<T> {
+export interface PolygonWith<T> {
   polygon: Polygon;
   element: T;
 }

@@ -2,6 +2,7 @@ import { accentColor, lineWidth } from '../theme';
 import { distSq, randomColor } from '../utils';
 import Element from './Element';
 import Point from './Point';
+import { Restriction } from './Restriction';
 
 const hoverOffset = 3;
 
@@ -10,6 +11,7 @@ export default class Line implements Element {
   a: number = 0;
   b: number = 0;
   hover: boolean = false;
+  restrictions: Restriction[] = [];
 
   constructor(point1: Point, point2: Point) {
     this.points = [point1, point2];

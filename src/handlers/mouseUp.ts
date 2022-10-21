@@ -1,6 +1,6 @@
 import Line from '../class/Line';
 import Point from '../class/Point';
-import { DrawState, EditorMode, HoveredElement } from '../types';
+import { DrawState, EditorMode, PolygonWith } from '../types';
 import { findHoveredLines, findHoveredPoints } from '../utils';
 
 export default function mouseUp(
