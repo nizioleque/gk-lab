@@ -1,10 +1,8 @@
-import { useEffect, useRef, useState, MouseEvent, useContext } from 'react';
+import { useEffect, useRef, MouseEvent, useContext } from 'react';
 import { AppContext } from '../AppContext';
 import Point from '../class/Point';
-import RestrictionData from '../class/Restriction';
 import useError from '../hooks/useError';
 import useHandlers from '../hooks/useHandlers';
-import usePolygons from '../hooks/usePolygons';
 import useShiftPressed from '../hooks/useShiftPressed';
 import { DrawState } from '../types';
 
@@ -14,7 +12,8 @@ interface CanvasProps {
 
 function Canvas({ size }: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { editorMode } = useContext(AppContext);
+  const { editorMode, polygons, addPolygon, removePolygon } =
+    useContext(AppContext);
   const ctx = () => canvasRef.current?.getContext('2d')!;
   const getMousePosition = (event: MouseEvent): Point => {
     const rect = canvasRef.current?.getBoundingClientRect()!;
@@ -24,12 +23,7 @@ function Canvas({ size }: CanvasProps) {
   const drawState: DrawState = {};
   useShiftPressed(drawState);
 
-  const { polygons, addPolygon, removePolygon } = usePolygons();
   useEffect(() => draw(), [size, polygons]);
-
-  const [restrictionData, setRestrictionData] = useState<RestrictionData>(
-    new RestrictionData()
-  );
 
   const { showError, errorText, setErrorText } = useError();
 

@@ -4,6 +4,8 @@ import './Menu.css';
 import { EditorMode } from '../types';
 import AnimateHeight from 'react-animate-height';
 import ModeButton from './ModeButton';
+import SceneButton from './SceneButton';
+import scenes from '../scenes';
 
 function Menu() {
   const { editorMode } = useContext(AppContext);
@@ -47,6 +49,11 @@ function Menu() {
       </div>
       <div className='menu-section'>
         <h3>Sceny</h3>
+        <div className='buttons'>
+          {scenes.map((scene) => (
+            <SceneButton key={scene.name} scene={scene} />
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -25,7 +25,7 @@ function ModeButton({ text, mode }: ModeButtonProps) {
   return (
     <button
       onClick={() => setEditorMode(mode)}
-      className={editorMode === mode ? 'active' : undefined}
+      className={`menu-button ${editorMode === mode ? 'active' : ''}`}
     >
       <div className='shortcut-key key'>{index}</div>
       {text}
