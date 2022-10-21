@@ -1,7 +1,7 @@
 import { useContext } from 'react';
-import { AppContext } from './AppContext';
+import { AppContext } from '../AppContext';
 import './Menu.css';
-import { EditorMode } from './types';
+import { EditorMode } from '../types';
 
 interface ModeButtonProps {
   text: string;

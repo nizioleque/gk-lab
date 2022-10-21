@@ -1,7 +1,7 @@
+import { accentColor, pointRadius } from '../theme';
 import { distSq } from '../utils';
 import Element from './Element';
 
-const pointRadius = 6;
 const hoverOffset = Math.pow(10, 2);
 
 export default class Point implements Element {
@@ -15,7 +15,7 @@ export default class Point implements Element {
   }
 
   draw(ctx: CanvasRenderingContext2D): void {
-    if (this.hover) ctx.fillStyle = 'red';
+    if (this.hover) ctx.fillStyle = accentColor;
     else ctx.fillStyle = 'black';
     ctx.beginPath();
     ctx.arc(this.x, this.y, pointRadius, 0, Math.PI * 2);

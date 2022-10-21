@@ -28,8 +28,6 @@ export default function mouseMove(
   }
 
   function moveMode() {
-    console.log('shift:', drawState.isShiftPressed);
-
     const draggedElement = drawState.draggedLine || drawState.draggedPoint;
     if (draggedElement && drawState.isShiftPressed) {
       // Drag the entire polygon

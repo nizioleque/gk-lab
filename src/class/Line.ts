@@ -1,3 +1,4 @@
+import { accentColor, lineWidth } from '../theme';
 import { distSq, randomColor } from '../utils';
 import Element from './Element';
 import Point from './Point';
@@ -29,10 +30,11 @@ export default class Line implements Element {
   }
 
   draw(ctx: CanvasRenderingContext2D): void {
-    if (this.hover) ctx.strokeStyle = 'red';
+    if (this.hover) ctx.strokeStyle = accentColor;
+    // else ctx.strokeStyle = 'black';
     else ctx.strokeStyle = randomColor();
 
-    ctx.lineWidth = 5;
+    ctx.lineWidth = lineWidth;
     ctx.beginPath();
     ctx.moveTo(this.points[0].x, this.points[0].y);
     ctx.lineTo(this.points[1].x, this.points[1].y);

@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState, MouseEvent, useContext } from 'react';
-import { AppContext } from './AppContext';
-import Point from './class/Point';
-import Polygon from './class/Polygon';
-import mouseDown from './handlers/mouseDown';
-import mouseMove from './handlers/mouseMove';
-import mouseUp from './handlers/mouseUp';
-import { DrawState } from './types';
+import { AppContext } from '../AppContext';
+import Point from '../class/Point';
+import Polygon from '../class/Polygon';
+import mouseDown from '../handlers/mouseDown';
+import mouseMove from '../handlers/mouseMove';
+import mouseUp from '../handlers/mouseUp';
+import { DrawState } from '../types';
 
 interface CanvasProps {
   size: { width: number; height: number };
@@ -25,7 +25,6 @@ function Canvas({ size }: CanvasProps) {
   useEffect(() => {
     function setShiftPressed(event: KeyboardEvent) {
       if (event.shiftKey) drawState.isShiftPressed = true;
-      console.log('keyboard event');
     }
     function resetShiftPressed() {
       drawState.isShiftPressed = false;
