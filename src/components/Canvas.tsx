@@ -42,6 +42,24 @@ function Canvas({ size }: CanvasProps) {
 
   useEffect(() => draw(), [size, polygons]);
 
+  // Error handling
+  const [errorText, _setErrorText] = useState<string | undefined>(undefined);
+  const [showError, setShowError] = useState<boolean>(false);
+  const [timeouts, setTimeouts] = useState<NodeJS.Timeout[]>([]);
+  const setErrorText = (text: string) => {
+    timeouts.forEach(clearTimeout);
+    setTimeouts([]);
+    _setErrorText(text);
+    setShowError(true);
+    const timeout1 = setTimeout(() => {
+      setShowError(false);
+      const timeout2 = setTimeout(() => _setErrorText(undefined), 300);
+      timeouts.push(timeout2);
+      setTimeouts([...timeouts, timeout2]);
+    }, 1000);
+    setTimeouts([...timeouts, timeout1]);
+  };
+
   // Draw
   const draw = () => _draw(ctx());
   const _draw = (ctx: CanvasRenderingContext2D) => {
@@ -65,7 +83,9 @@ function Canvas({ size }: CanvasProps) {
       mousePoint,
       drawState,
       polygons,
+      addPolygon,
       addPolygon
+      setErrorText
     );
     if (redraw) draw();
   };
@@ -77,15 +97,21 @@ function Canvas({ size }: CanvasProps) {
   };
 
   return (
-    <canvas
-      ref={canvasRef}
-      className='canvas'
-      onMouseMove={handleMouseMove}
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
-      width={size.width}
-      height={size.height}
-    />
+    <>
+      <canvas
+        ref={canvasRef}
+        className='canvas'
+        onMouseMove={handleMouseMove}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        width={size.width}
+        height={size.height}
+      />
+      <div className={`alert ${showError ? 'show' : ''}`}>
+        <div className='alert-icon'>⚠️</div>
+        <div>{errorText}</div>
+      </div>
+    </>
   );
 }
 
