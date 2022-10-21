@@ -11,6 +11,7 @@ export default class Polygon {
     for (const line of this.lines) {
       line.draw(ctx);
     }
+    this.lines[0].points[0].draw(ctx);
   }
 
   highlightAll(): void {
