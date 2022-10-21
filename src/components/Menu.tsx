@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { AppContext } from '../AppContext';
 import './Menu.css';
 import { EditorMode } from '../types';

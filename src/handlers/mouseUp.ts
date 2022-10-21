@@ -1,7 +1,5 @@
-import Line from '../class/Line';
 import Point from '../class/Point';
-import { DrawState, EditorMode, PolygonWith } from '../types';
-import { findHoveredLines, findHoveredPoints } from '../utils';
+import { DrawState, EditorMode } from '../types';
 
 export default function mouseUp(
   editorMode: EditorMode,

@@ -1,13 +1,8 @@
 import Line from '../class/Line';
 import Point from '../class/Point';
 import Polygon from '../class/Polygon';
-import { DrawState, EditorMode, PolygonWith } from '../types';
-import {
-  canClosePolygon,
-  findHoveredElement,
-  findHoveredLines,
-  findHoveredPoints,
-} from '../utils';
+import { DrawState, EditorMode } from '../types';
+import { canClosePolygon, findHoveredElement } from '../utils';
 
 export default function mouseMove(
   editorMode: EditorMode,
@@ -97,16 +92,6 @@ export default function mouseMove(
   }
 
   function highlight(edgeOnly: boolean = false): boolean {
-    // Highlight element element
-    // const resultLines = findHoveredLines(polygons, mousePoint);
-    // const resultPoints = findHoveredPoints(polygons, mousePoint);
-
-    // let hoveredElement:
-    //   | HoveredElement<Point>
-    //   | HoveredElement<Line>
-    //   | undefined;
-    // if (resultPoints.length > 0) hoveredElement = resultPoints[0];
-    // else if (resultLines.length > 0) hoveredElement = resultLines[0];
     const hoveredElement = findHoveredElement(polygons, mousePoint);
     if (!hoveredElement) return true;
 

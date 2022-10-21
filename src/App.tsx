@@ -1,6 +1,6 @@
 import Canvas from './components/Canvas';
 import './App.css';
-import { createContext, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Menu from './components/Menu';
 import { EditorMode } from './types';
 import { AppContext } from './AppContext';
@@ -17,7 +17,6 @@ function App() {
   };
 
   const [editorMode, setEditorMode] = useState<EditorMode>(EditorMode.Draw);
-  
 
   useEffect(() => {
     updateCanvasSize();

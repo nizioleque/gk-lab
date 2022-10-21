@@ -1,4 +1,3 @@
-import Element from './class/Element';
 import Line from './class/Line';
 import Point from './class/Point';
 import Polygon from './class/Polygon';

@@ -1,12 +1,11 @@
 import { accentColor, lineWidth } from '../theme';
 import { distSq, randomColor } from '../utils';
-import Element from './Element';
 import Point from './Point';
 import { Restriction } from './Restriction';
 
 const hoverOffset = 3;
 
-export default class Line implements Element {
+export default class Line {
   points: [Point, Point];
   a: number = 0;
   b: number = 0;

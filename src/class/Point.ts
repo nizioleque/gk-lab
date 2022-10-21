@@ -1,10 +1,9 @@
 import { accentColor, pointRadius } from '../theme';
 import { distSq } from '../utils';
-import Element from './Element';
 
 const hoverOffset = Math.pow(10, 2);
 
-export default class Point implements Element {
+export default class Point {
   x: number;
   y: number;
   hover: boolean = false;
