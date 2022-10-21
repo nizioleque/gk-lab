@@ -2,7 +2,15 @@ import Line from '../class/Line';
 import Point from '../class/Point';
 import Polygon from '../class/Polygon';
 import { DrawState, EditorMode, HoveredElement } from '../types';
-import { canClosePolygon, findHoveredLines, findHoveredPoints } from '../utils';
+import {
+  canClosePolygon,
+  findHoveredElement,
+  findHoveredLines,
+  findHoveredPoints,
+  middleOfLine,
+  removeLine,
+  removePoint,
+} from '../utils';
 
 export default function mouseDown(
   editorMode: EditorMode,
@@ -96,15 +104,7 @@ export default function mouseDown(
   }
 
   function deleteMode() {
-    const resultLines = findHoveredLines(polygons, mousePoint);
-    const resultPoints = findHoveredPoints(polygons, mousePoint);
-
-    let hoveredElement:
-      | HoveredElement<Point>
-      | HoveredElement<Line>
-      | undefined;
-    if (resultPoints.length > 0) hoveredElement = resultPoints[0];
-    else if (resultLines.length > 0) hoveredElement = resultLines[0];
+    const hoveredElement = findHoveredElement(polygons, mousePoint);
     if (!hoveredElement) return false;
 
     if (drawState.isShiftPressed) {
@@ -134,7 +134,19 @@ export default function mouseDown(
   }
 
   function splitMode() {
-    return false;
+    const hoveredElement = findHoveredElement(polygons, mousePoint, true);
+    if (!hoveredElement) return false;
+
+    const hoveredLine = hoveredElement.element as Line;
+    const hoveredLineIndex = hoveredElement.polygon.lines.indexOf(hoveredLine);
+
+    const middlePoint = middleOfLine(hoveredLine);
+    const oldEnd = hoveredLine.points[1];
+    hoveredLine.setEnd(middlePoint);
+    const newLine = new Line(middlePoint, oldEnd);
+
+    hoveredElement.polygon.lines.splice(hoveredLineIndex + 1, 0, newLine);
+    return true;
   }
 
   function setLengthMode() {
@@ -143,38 +155,5 @@ export default function mouseDown(
 
   function setPerpendicularMode() {
     return false;
-  }
-
-  function removeLine(hoveredElement: HoveredElement<Line>) {
-    // Connect the next edge to the start of the removed edge
-    const hoveredLine = hoveredElement.element as Line;
-    const nextLine = hoveredElement.polygon.lines.find(
-      (line) => line.points[0] === hoveredLine.points[1]
-    );
-    nextLine?.setStart(hoveredLine.points[0]);
-
-    // Remove the hovered edge
-    hoveredElement.polygon.lines = hoveredElement.polygon.lines.filter(
-      (line) => line !== hoveredLine
-    );
-  }
-
-  function removePoint(hoveredElement: HoveredElement<Point>) {
-    // Find the two adjacent edges
-    const hoveredPoint = hoveredElement.element as Point;
-    const nextLine = hoveredElement.polygon.lines.find(
-      (line) => line.points[0] === hoveredPoint
-    );
-    const prevLine = hoveredElement.polygon.lines.find(
-      (line) => line.points[1] === hoveredPoint
-    );
-
-    // Move the start of the next edge
-    nextLine!.points[0] = prevLine!.points[0];
-
-    // Remove the previous edge
-    hoveredElement.polygon.lines = hoveredElement.polygon.lines.filter(
-      (line) => line !== prevLine
-    );
   }
 }

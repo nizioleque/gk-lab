@@ -55,10 +55,10 @@ function Canvas({ size }: CanvasProps) {
     setShowError(true);
     const timeout1 = setTimeout(() => {
       setShowError(false);
-      const timeout2 = setTimeout(() => _setErrorText(undefined), 300);
+      const timeout2 = setTimeout(() => _setErrorText(undefined), 200);
       timeouts.push(timeout2);
       setTimeouts([...timeouts, timeout2]);
-    }, 1000);
+    }, 1500);
     setTimeouts([...timeouts, timeout1]);
   };
 

@@ -2,7 +2,12 @@ import Line from '../class/Line';
 import Point from '../class/Point';
 import Polygon from '../class/Polygon';
 import { DrawState, EditorMode, HoveredElement } from '../types';
-import { canClosePolygon, findHoveredLines, findHoveredPoints } from '../utils';
+import {
+  canClosePolygon,
+  findHoveredElement,
+  findHoveredLines,
+  findHoveredPoints,
+} from '../utils';
 
 export default function mouseMove(
   editorMode: EditorMode,
@@ -80,7 +85,7 @@ export default function mouseMove(
   }
 
   function splitMode() {
-    return false;
+    return highlight(true);
   }
 
   function setLengthMode() {
@@ -91,20 +96,29 @@ export default function mouseMove(
     return false;
   }
 
-  function highlight(allowShift: boolean = true): boolean {
+  function highlight(edgeOnly: boolean = false): boolean {
     // Highlight element element
-    const resultLines = findHoveredLines(polygons, mousePoint);
-    const resultPoints = findHoveredPoints(polygons, mousePoint);
+    // const resultLines = findHoveredLines(polygons, mousePoint);
+    // const resultPoints = findHoveredPoints(polygons, mousePoint);
 
-    let hoveredElement:
-      | HoveredElement<Point>
-      | HoveredElement<Line>
-      | undefined;
-    if (resultPoints.length > 0) hoveredElement = resultPoints[0];
-    else if (resultLines.length > 0) hoveredElement = resultLines[0];
+    // let hoveredElement:
+    //   | HoveredElement<Point>
+    //   | HoveredElement<Line>
+    //   | undefined;
+    // if (resultPoints.length > 0) hoveredElement = resultPoints[0];
+    // else if (resultLines.length > 0) hoveredElement = resultLines[0];
+    const hoveredElement = findHoveredElement(polygons, mousePoint);
     if (!hoveredElement) return true;
 
-    if (allowShift && drawState.isShiftPressed) {
+    if (edgeOnly) {
+      if (hoveredElement.element instanceof Line) {
+        hoveredElement.element.hover = true;
+        return true;
+      }
+      return false;
+    }
+
+    if (drawState.isShiftPressed) {
       hoveredElement.polygon.highlightAll();
     } else {
       hoveredElement.element.hover = true;
