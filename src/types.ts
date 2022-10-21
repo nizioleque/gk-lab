@@ -21,6 +21,9 @@ export enum EditorMode {
   Draw,
   Move,
   Delete,
+  Split,
+  SetLength,
+  SetPerpendicular,
 }
 
 export interface HoveredElement<T> {

@@ -15,6 +15,14 @@ export default function mouseUp(
       return moveMode();
     case EditorMode.Delete:
       return deleteMode();
+    case EditorMode.Split:
+      return splitMode();
+    case EditorMode.SetLength:
+      return setLengthMode();
+    case EditorMode.SetPerpendicular:
+      return setPerpendicularMode();
+    default:
+      return false;
   }
 
   function addMode() {
@@ -30,6 +38,18 @@ export default function mouseUp(
   }
 
   function deleteMode() {
+    return false;
+  }
+
+  function splitMode() {
+    return false;
+  }
+
+  function setLengthMode() {
+    return false;
+  }
+
+  function setPerpendicularMode() {
     return false;
   }
 }

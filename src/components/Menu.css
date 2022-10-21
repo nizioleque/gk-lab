@@ -44,6 +44,10 @@
   margin-bottom: 5px;
 }
 
+.rah-static--height-zero {
+  margin-top: -5px;
+}
+
 .key {
   font-weight: 700;
   font-size: 80%;
@@ -57,4 +61,13 @@ h3 {
   margin-top: 0.3rem;
   margin-bottom: 0.8rem;
   text-align: center;
+}
+
+h5 {
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 0.3rem;
+  margin-bottom: 0.1rem;
+  font-variant: small-caps;
+  text-transform: lowercase;
 }
