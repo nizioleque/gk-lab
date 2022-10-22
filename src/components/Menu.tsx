@@ -93,6 +93,9 @@ function Menu() {
       <div className='menu-section'>
         <h3>Ograniczenia</h3>
         <div className='buttons'>
+          {restrictionData.restrictions.length === 0 && (
+            <div className='menu-caption center'>Brak zdefiniowanych ograniczeń</div>
+          )}
           {restrictionData.restrictions.map((r, i) => (
             <RestrictionButton key={i} restriction={r} />
           ))}

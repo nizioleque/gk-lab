@@ -16,9 +16,9 @@ export class Restriction {
     this.members = members;
   }
 
-  otherMember(member: PolygonWith<Line>): PolygonWith<Line> | undefined {
-    return member === this.members[1] ? this.members[0] : this.members?.[1];
-  }
+  // otherMember(member: PolygonWith<Line>): PolygonWith<Line> | undefined {
+  //   return member === this.members[1] ? this.members[0] : this.members?.[1];
+  // }
 
   apply(mousePoint: Point, startPoint?: Point): boolean {
     return false;
@@ -76,15 +76,11 @@ export class LengthRestriction extends Restriction {
       const startPointIndex = 0;
       console.log('start point not in line!', startPointIndex);
       const otherPointIndex = (startPointIndex + 1) % 2;
-      const alpha = Math.atan(line.a);
-      const newX = this.length * Math.cos(alpha);
-      const newY = this.length * Math.sin(alpha);
+      const { dX, dY } = aToXY(line.calculateAB().a, this.length);
       const newPointX =
-        line.points[startPointIndex].x +
-        newX * (otherPointIndex === 0 ? -1 : 1);
+        line.points[startPointIndex].x + dX * (otherPointIndex === 0 ? -1 : 1);
       const newPointY =
-        line.points[startPointIndex].y +
-        newY * (otherPointIndex === 0 ? -1 : 1);
+        line.points[startPointIndex].y + dY * (otherPointIndex === 0 ? -1 : 1);
       line.points[otherPointIndex].x = newPointX;
       line.points[otherPointIndex].y = newPointY;
     }
@@ -99,6 +95,29 @@ export class PerpendicularRestriction extends Restriction {
   }
 
   apply(): boolean {
-    return false;
+    const a1 = this.members[0].element.calculateAB().a;
+    const a2Current = this.members[1].element.calculateAB().a;
+    const a2New = -1 / a1;
+
+    if (Math.abs(a2Current - a2New) < 0.01) {
+      return false;
+    }
+
+    // modify angle to adjust
+    const constantPoint = this.members[1].element.points[0];
+    const movingPoint = this.members[1].element.points[1];
+
+    const { dX, dY } = aToXY(a2New, this.members[1].element.length());
+    movingPoint.x = constantPoint.x + dX;
+    movingPoint.y = constantPoint.y + dY;
+
+    return true;
   }
+}
+
+function aToXY(a: number, length: number): { dX: number; dY: number } {
+  const alpha = Math.atan(a);
+  const dX = length * Math.cos(alpha);
+  const dY = length * Math.sin(alpha);
+  return { dX, dY };
 }

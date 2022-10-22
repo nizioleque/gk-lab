@@ -12,32 +12,33 @@ const hoverOffset = 3;
 
 export default class Line {
   points: [Point, Point];
-  a: number = 0;
-  b: number = 0;
+  // a: number = 0;
+  // b: number = 0;
   hover: boolean = false;
   restrictions: Restriction[] = [];
 
   constructor(point1: Point, point2: Point) {
     this.points = [point1, point2];
-    this.calculateAB();
+    // this.calculateAB();
   }
 
   setEnd(end: Point) {
     this.points[1] = end;
-    this.calculateAB();
+    // this.calculateAB();
   }
 
   setStart(start: Point) {
     this.points[0] = start;
-    this.calculateAB();
+    // this.calculateAB();
   }
 
-  calculateAB() {
+  calculateAB(): { a: number; b: number } {
     const [point1, point2] = this.points;
     const lPt = point1.x < point2.x ? point1 : point2;
     const rPt = lPt === point1 ? point2 : point1;
-    this.a = (rPt.y - lPt.y) / (rPt.x - lPt.x);
-    this.b = rPt.y - rPt.x * this.a;
+    const a = (rPt.y - lPt.y) / (rPt.x - lPt.x);
+    const b = rPt.y - rPt.x * a;
+    return { a, b };
   }
 
   draw(ctx: CanvasRenderingContext2D): void {

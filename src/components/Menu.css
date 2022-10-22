@@ -105,3 +105,7 @@ input {
   border: 1px rgba(0, 0, 0, 0.3) solid;
   border-radius: 10px;
 }
+
+.center {
+  text-align: center;
+}
