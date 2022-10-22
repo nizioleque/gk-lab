@@ -48,30 +48,57 @@ export default class Line {
 
     this.points[0].draw(ctx);
 
-    if (this.restrictions.find((r) => r.type === RestrictionType.Length)) {
-      const middlePoint = middleOfLine(this);
-      ctx.strokeStyle = 'red';
-      ctx.fillStyle = 'red';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.arc(middlePoint.x - 10, middlePoint.y, 10, 0, 2 * Math.PI);
-      ctx.stroke();
-      ctx.font = '16px Arial Black';
-      ctx.fillText('D', middlePoint.x - 16, middlePoint.y + 5);
+    const hasLengthRestriction = this.restrictions.find(
+      (r) => r.type === RestrictionType.Length
+    );
+    const hasPerpendicularRestriction = this.restrictions.find(
+      (r) => r.type === RestrictionType.Perpendicular
+    );
+
+    if (hasLengthRestriction && hasPerpendicularRestriction) {
+      this.drawMarker(ctx, RestrictionType.Length, -10, 0, -16, 5);
+      this.drawMarker(ctx, RestrictionType.Perpendicular, 10, 0, 4, 5);
+    } else if (hasLengthRestriction) {
+      this.drawMarker(ctx, RestrictionType.Length, 0, 0, -6, 5);
+    } else if (hasPerpendicularRestriction) {
+      this.drawMarker(ctx, RestrictionType.Perpendicular, 0, 0, -6, 5);
     }
-    if (
-      this.restrictions.find((r) => r.type === RestrictionType.Perpendicular)
-    ) {
-      const middlePoint = middleOfLine(this);
-      ctx.strokeStyle = 'lime';
-      ctx.fillStyle = 'lime';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.arc(middlePoint.x + 10, middlePoint.y, 10, 0, 2 * Math.PI);
-      ctx.stroke();
-      ctx.font = '16px Arial Black';
-      ctx.fillText('P', middlePoint.x + 4, middlePoint.y + 5);
-    }
+
+    // if (this.restrictions.find((r) => r.type === RestrictionType.Length)) {
+    // }
+    // if (
+    //   this.restrictions.find((r) => r.type === RestrictionType.Perpendicular)
+    // ) {
+    // }
+  }
+
+  drawMarker(
+    ctx: CanvasRenderingContext2D,
+    type: RestrictionType,
+    xOffset: number,
+    yOffset: number,
+    textXOffset: number,
+    textYOffset: number
+  ) {
+    const middlePoint = middleOfLine(this);
+    ctx.strokeStyle = type === RestrictionType.Length ? 'red' : 'lime';
+    ctx.fillStyle = type === RestrictionType.Length ? 'red' : 'lime';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(
+      middlePoint.x + xOffset,
+      middlePoint.y + yOffset,
+      9,
+      0,
+      2 * Math.PI
+    );
+    ctx.stroke();
+    ctx.font = '16px Arial Black';
+    ctx.fillText(
+      type === RestrictionType.Length ? 'D' : 'P',
+      middlePoint.x + textXOffset,
+      middlePoint.y + textYOffset
+    );
   }
 
   isAt(mousePoint: Point, highlight: boolean = false): boolean {

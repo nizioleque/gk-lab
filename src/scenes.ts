@@ -44,6 +44,10 @@ const scene1Data = () => {
     polygon: polygon1,
     element: line2,
   });
+  restrictionData.add(RestrictionType.Length, {
+    polygon: polygon2,
+    element: line8,
+  });
   restrictionData.add(
     RestrictionType.Perpendicular,
     {
