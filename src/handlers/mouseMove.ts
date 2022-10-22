@@ -69,9 +69,7 @@ export default function mouseMove(
       drawState.dragStart = mousePoint;
 
       // adjustOtherPolygons(drawState.draggedLine.polygon);
-      const success = restrictionData.applyAll(
-        drawState.draggedLine.element.points[0]
-      );
+      const success = restrictionData.applyAll(mousePoint);
       if (!success)
         setErrorText(
           'Nie udało się zaaplikować ograniczeń - ograniczenia mogą być niemożliwe do zrealizowania'
@@ -83,7 +81,10 @@ export default function mouseMove(
       drawState.draggedPoint.element.hover = true;
 
       // adjustOtherPolygons(drawState.draggedPoint.polygon);
-      const success = restrictionData.applyAll(drawState.draggedPoint.element);
+      const success = restrictionData.applyAll(
+        mousePoint,
+        drawState.draggedPoint.element
+      );
       if (!success)
         setErrorText(
           'Nie udało się zaaplikować ograniczeń - ograniczenia mogą być niemożliwe do zrealizowania'

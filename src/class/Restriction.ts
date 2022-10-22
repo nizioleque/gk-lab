@@ -20,7 +20,7 @@ export class Restriction {
     return member === this.members[1] ? this.members[0] : this.members?.[1];
   }
 
-  apply(startPointIndex: number): boolean {
+  apply(mousePoint: Point, startPoint?: Point): boolean {
     return false;
   }
 }
@@ -33,7 +33,7 @@ export class LengthRestriction extends Restriction {
     this.length = length;
   }
 
-  apply(startPointIndex: number): boolean {
+  apply(mousePoint: Point, startPoint?: Point): boolean {
     const actualLength = this.members[0].element.length();
     if (Math.abs(actualLength - this.length) < 0.01) {
       console.log('length is correct');
@@ -46,18 +46,48 @@ export class LengthRestriction extends Restriction {
 
     // modify length to adjust
     const line = this.members[0].element;
-    const otherPointIndex = (startPointIndex + 1) % 2;
-    const alpha = Math.atan(line.a);
-    // const oldX = line.points[1].x - line.points[0].x;
-    // const oldY = line.points[1].y - line.points[0].y;
-    const newX = this.length * Math.cos(alpha);
-    const newY = this.length * Math.sin(alpha);
-    const newPointX =
-      line.points[startPointIndex].x + newX * (otherPointIndex === 0 ? -1 : 1);
-    const newPointY =
-      line.points[startPointIndex].y + newY * (otherPointIndex === 0 ? -1 : 1);
-    line.points[otherPointIndex].x = newPointX;
-    line.points[otherPointIndex].y = newPointY;
+    const isStartPointInLine: boolean = startPoint
+      ? line.points.includes(startPoint)
+      : false;
+
+    if (isStartPointInLine) {
+      let dragPointIndex: number = line.points.indexOf(startPoint!);
+      const constantPointIndex = (dragPointIndex + 1) % 2;
+      const constantPoint = line.points[constantPointIndex];
+      console.log('start point in line!', dragPointIndex, constantPointIndex);
+
+      const deltaX = mousePoint.x - constantPoint.x;
+      const deltaY = mousePoint.y - constantPoint.y;
+
+      const a = deltaY / deltaX;
+      const alpha = Math.atan(a);
+
+      const newX = this.length * Math.cos(alpha);
+      const newY = this.length * Math.sin(alpha);
+      const newPointX =
+        line.points[constantPointIndex].x +
+        newX * (mousePoint.x < constantPoint.x ? -1 : 1);
+      const newPointY =
+        line.points[constantPointIndex].y +
+        newY * (mousePoint.x < constantPoint.x ? -1 : 1);
+      line.points[dragPointIndex].x = newPointX;
+      line.points[dragPointIndex].y = newPointY;
+    } else {
+      const startPointIndex = 0;
+      console.log('start point not in line!', startPointIndex);
+      const otherPointIndex = (startPointIndex + 1) % 2;
+      const alpha = Math.atan(line.a);
+      const newX = this.length * Math.cos(alpha);
+      const newY = this.length * Math.sin(alpha);
+      const newPointX =
+        line.points[startPointIndex].x +
+        newX * (otherPointIndex === 0 ? -1 : 1);
+      const newPointY =
+        line.points[startPointIndex].y +
+        newY * (otherPointIndex === 0 ? -1 : 1);
+      line.points[otherPointIndex].x = newPointX;
+      line.points[otherPointIndex].y = newPointY;
+    }
 
     return true;
   }
@@ -103,19 +133,14 @@ export class RestrictionData {
     this.restrictions = this.restrictions.filter((r) => r !== restriction);
   }
 
-  applyAll(startPoint: Point): boolean {
+  applyAll(mousePoint: Point, startPoint?: Point): boolean {
     let iters = 0;
 
     while (true) {
       let changed = false;
 
       for (const restriction of this.restrictions) {
-        const startPointIndex =
-          restriction.members[0].element.points.indexOf(startPoint);
-
-        const result = restriction.apply(
-          startPointIndex === -1 ? 0 : startPointIndex
-        );
+        const result = restriction.apply(mousePoint, startPoint);
         if (result) changed = true;
       }
 
