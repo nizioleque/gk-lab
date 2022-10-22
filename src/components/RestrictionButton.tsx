@@ -7,7 +7,7 @@ interface RestrictionButtonProps {
 }
 
 function RestrictionButton({ restriction }: RestrictionButtonProps) {
-  const { setHoveredRestriction } = useContext(AppContext);
+  const { setHoveredRestriction, restrictionData } = useContext(AppContext);
 
   return (
     <div
@@ -20,7 +20,15 @@ function RestrictionButton({ restriction }: RestrictionButtonProps) {
           ? 'Długość'
           : 'Prostopadłość'}
       </div>
-      <button className='apply-button'>Usuń</button>
+      <button
+        className='apply-button'
+        onClick={() => {
+          restrictionData.delete(restriction);
+          setHoveredRestriction(undefined);
+        }}
+      >
+        Usuń
+      </button>
     </div>
   );
 }
