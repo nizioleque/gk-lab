@@ -30,6 +30,10 @@
   transition: background-color 100ms ease-in-out;
 }
 
+.menu-button :not(button) {
+  font-size: 0.9rem;
+}
+
 .menu-button:hover {
   background-color: rgba(0, 212, 212, 0.534);
 }
@@ -66,7 +70,7 @@
 
 .key {
   font-weight: 700;
-  font-size: 80%;
+  font-size: 80% !important;
   border: 1px black solid;
   border-radius: 5px;
   padding: 1px 4px;

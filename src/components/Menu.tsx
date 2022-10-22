@@ -6,9 +6,10 @@ import AnimateHeight from 'react-animate-height';
 import ModeButton from './ModeButton';
 import SceneButton from './SceneButton';
 import scenes from '../scenes';
+import RestrictionButton from './RestrictionButton';
 
 function Menu() {
-  const { editorMode } = useContext(AppContext);
+  const { editorMode, restrictionData } = useContext(AppContext);
 
   return (
     <div className='menu'>
@@ -46,6 +47,11 @@ function Menu() {
       </div>
       <div className='menu-section'>
         <h3>Ograniczenia</h3>
+        <div className='buttons'>
+          {restrictionData.restrictions.map((r, i) => (
+            <RestrictionButton key={i} restriction={r} />
+          ))}
+        </div>
       </div>
       <div className='menu-section'>
         <h3>Sceny</h3>
