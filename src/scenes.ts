@@ -1,15 +1,14 @@
 import Line from './class/Line';
 import Point from './class/Point';
 import Polygon from './class/Polygon';
-import RestrictionData from './class/Restriction';
+import RestrictionData, { RestrictionType } from './class/Restriction';
 
 export interface SceneGenerator {
   name: string;
-  polygons: () => Polygon[];
-  restrictionData: () => RestrictionData;
+  data: () => { polygons: Polygon[]; restrictionData: RestrictionData };
 }
 
-const polygons1 = () => {
+const scene1Data = () => {
   const point1 = new Point(525, 200);
   const point2 = new Point(360, 390);
   const point3 = new Point(490, 685);
@@ -28,7 +27,7 @@ const polygons1 = () => {
   const point7 = new Point(80, 290);
   const point8 = new Point(245, 160);
   const point9 = new Point(55, 165);
-  const point10 = new Point(170, 80);
+  const point10 = new Point(200, 290);
 
   const line6 = new Line(point6, point7);
   const line7 = new Line(point7, point8);
@@ -38,15 +37,31 @@ const polygons1 = () => {
 
   const polygon2 = new Polygon([line6, line7, line8, line9, line10]);
 
-  return [polygon1, polygon2];
-};
+  const polygons = [polygon1, polygon2];
 
-const restrictionData1 = () => new RestrictionData();
+  const restrictionData = new RestrictionData();
+  restrictionData.add(RestrictionType.Length, {
+    polygon: polygon1,
+    element: line2,
+  });
+  restrictionData.add(
+    RestrictionType.Perpendicular,
+    {
+      polygon: polygon1,
+      element: line2,
+    },
+    {
+      polygon: polygon2,
+      element: line7,
+    }
+  );
+
+  return { polygons, restrictionData };
+};
 
 const scene1: SceneGenerator = {
   name: 'Gwiazda i pięciokąt',
-  polygons: polygons1,
-  restrictionData: restrictionData1,
+  data: scene1Data,
 };
 
 const scenes: SceneGenerator[] = [scene1];

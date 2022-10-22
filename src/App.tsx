@@ -5,7 +5,7 @@ import Menu from './components/Menu';
 import { EditorMode } from './types';
 import { AppContext } from './AppContext';
 import usePolygons from './hooks/usePolygons';
-// import RestrictionData from './class/Restriction';
+import RestrictionData from './class/Restriction';
 import { SceneGenerator } from './scenes';
 
 function App() {
@@ -22,13 +22,14 @@ function App() {
   const [editorMode, setEditorMode] = useState<EditorMode>(EditorMode.Draw);
   const { polygons, addPolygon, removePolygon, setPolygons } = usePolygons();
 
-  // const [restrictionData, setRestrictionData] = useState<RestrictionData>(
-  //   new RestrictionData()
-  // );
+  const [restrictionData, setRestrictionData] = useState<RestrictionData>(
+    new RestrictionData()
+  );
 
   const applyScene = (scene: SceneGenerator) => {
-    setPolygons(scene.polygons());
-    // setRestrictionData(structuredClone(scene.restrictionData));
+    const newSceneData = scene.data();
+    setPolygons(newSceneData.polygons);
+    setRestrictionData(newSceneData.restrictionData);
   };
 
   useEffect(() => {
@@ -49,6 +50,7 @@ function App() {
         addPolygon,
         removePolygon,
         applyScene,
+        restrictionData,
       }}
     >
       <div className='App'>
