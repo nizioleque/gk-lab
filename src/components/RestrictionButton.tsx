@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { AppContext } from '../AppContext';
-import { Restriction, RestrictionType } from '../class/Restriction';
+import { LengthRestriction, Restriction } from '../class/Restriction';
 
 interface RestrictionButtonProps {
   restriction: Restriction;
@@ -16,8 +16,8 @@ function RestrictionButton({ restriction }: RestrictionButtonProps) {
       onMouseLeave={() => setHoveredRestriction(undefined)}
     >
       <div>
-        {restriction.type === RestrictionType.Length
-          ? 'Długość'
+        {restriction instanceof LengthRestriction
+          ? `Długość: ${restriction.length}`
           : 'Prostopadłość'}
       </div>
       <button

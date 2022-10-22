@@ -64,11 +64,15 @@ export default function mouseMove(
       drawState.draggedLine.element.points[1].y += offsetY;
       drawState.draggedLine.element.hover = true;
       drawState.dragStart = mousePoint;
+
+      // adjustOtherPolygons(drawState.draggedLine.polygon);
     } else if (drawState.draggedPoint) {
       // Drag one point
       drawState.draggedPoint.element.x = mousePoint.x;
       drawState.draggedPoint.element.y = mousePoint.y;
       drawState.draggedPoint.element.hover = true;
+
+      // adjustOtherPolygons(drawState.draggedPoint.polygon);
     } else {
       highlight();
     }
@@ -104,4 +108,18 @@ export default function mouseMove(
       hoveredElement.element.hover = true;
     }
   }
+
+  // function adjustOtherPolygons(currentPolygon: Polygon) {
+  //   console.log('ADJUST OTHER POLYGONS');
+  //   console.log('');
+  //   console.log('');
+  //   console.log('');
+  //   console.log('');
+
+  //   const otherPolygons = polygons.filter(
+  //     (polygon) => polygon !== currentPolygon
+  //   );
+
+  //   otherPolygons.forEach((polygon) => polygon.applyRestrictions());
+  // }
 }

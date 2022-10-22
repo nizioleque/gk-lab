@@ -20,4 +20,31 @@ export default class Polygon {
       line.points[0].hover = true;
     }
   }
+
+  // applyRestrictions(
+  //   startLine: Line = this.lines[0],
+  //   startPoint: Point = this.lines[0].points[0]
+  // ): { changed: boolean; error: boolean } {
+  //   const startLineIndex = this.lines.indexOf(startLine);
+  //   const startPointIndex = startLine.points.indexOf(startPoint);
+  //   let changed = false;
+  //   let error = false;
+
+  //   console.log(
+  //     'apply restrictions polygon',
+  //     this,
+  //     startLineIndex,
+  //     startPointIndex
+  //   );
+
+  //   for (let i = 0; i < this.lines.length; i++) {
+  //     const changedLine =
+  //       this.lines[(startLineIndex + i) % this.lines.length].applyRestrictions(
+  //         startPointIndex
+  //       );
+  //     if (changedLine) changed = true;
+  //   }
+
+  //   return { changed, error };
+  // }
 }

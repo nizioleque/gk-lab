@@ -1,7 +1,12 @@
 import { accentColor, lineWidth } from '../theme';
 import { distSq, middleOfLine, randomColor } from '../utils';
 import Point from './Point';
-import { Restriction, RestrictionType } from './Restriction';
+import {
+  LengthRestriction,
+  PerpendicularRestriction,
+  Restriction,
+  RestrictionType,
+} from './Restriction';
 
 const hoverOffset = 3;
 
@@ -49,10 +54,10 @@ export default class Line {
     this.points[0].draw(ctx);
 
     const hasLengthRestriction = this.restrictions.find(
-      (r) => r.type === RestrictionType.Length
+      (r) => r instanceof LengthRestriction
     );
     const hasPerpendicularRestriction = this.restrictions.find(
-      (r) => r.type === RestrictionType.Perpendicular
+      (r) => r instanceof PerpendicularRestriction
     );
 
     if (hasLengthRestriction && hasPerpendicularRestriction) {
@@ -127,4 +132,29 @@ export default class Line {
     this.hover = highlight && result;
     return result;
   }
+
+  length(): number {
+    return Math.sqrt(distSq(this.points[0], this.points[1]));
+  }
+
+  // applyRestrictions(startPointIndex: number): boolean {
+  //   console.log('applyRestrictions', this, startPointIndex);
+
+  //   const perpendicularRestrictions = this.restrictions.filter(
+  //     (r) => r.type === RestrictionType.Perpendicular
+  //   );
+  //   const lengthRestrictions = this.restrictions.filter(
+  //     (r) => r.type === RestrictionType.Length
+  //   );
+
+  //   for (const restriction of perpendicularRestrictions) {
+  //     console.log('applying perpendicular restriction');
+  //   }
+
+  //   for (const restriction of lengthRestrictions) {
+  //     console.log('applying length restriction');
+  //   }
+
+  //   return true;
+  // }
 }

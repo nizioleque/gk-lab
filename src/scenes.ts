@@ -1,7 +1,11 @@
 import Line from './class/Line';
 import Point from './class/Point';
 import Polygon from './class/Polygon';
-import { RestrictionData, RestrictionType } from './class/Restriction';
+import {
+  LengthRestriction,
+  PerpendicularRestriction,
+  RestrictionData,
+} from './class/Restriction';
 
 export interface SceneGenerator {
   name: string;
@@ -40,25 +44,59 @@ const scene1Data = () => {
   const polygons = [polygon1, polygon2];
 
   const restrictionData = new RestrictionData();
-  restrictionData.add(RestrictionType.Length, {
-    polygon: polygon1,
-    element: line2,
-  });
-  restrictionData.add(RestrictionType.Length, {
-    polygon: polygon2,
-    element: line8,
-  });
+  // restrictionData.add(RestrictionType.Length, {
+  //   polygon: polygon1,
+  //   element: line2,
+  // });
   restrictionData.add(
-    RestrictionType.Perpendicular,
-    {
-      polygon: polygon1,
-      element: line2,
-    },
-    {
-      polygon: polygon2,
-      element: line7,
-    }
+    new LengthRestriction(
+      {
+        polygon: polygon1,
+        element: line2,
+      },
+      200
+    )
   );
+
+  restrictionData.add(
+    new LengthRestriction(
+      {
+        polygon: polygon2,
+        element: line8,
+      },
+      200
+    )
+  );
+
+  // restrictionData.add(RestrictionType.Length, {
+  //   polygon: polygon2,
+  //   element: line8,
+  // });
+
+  restrictionData.add(
+    new PerpendicularRestriction(
+      {
+        polygon: polygon1,
+        element: line2,
+      },
+      {
+        polygon: polygon2,
+        element: line7,
+      }
+    )
+  );
+
+  // restrictionData.add(
+  //   RestrictionType.Perpendicular,
+  //   {
+  //     polygon: polygon1,
+  //     element: line2,
+  //   },
+  //   {
+  //     polygon: polygon2,
+  //     element: line7,
+  //   }
+  // );
 
   return { polygons, restrictionData };
 };
