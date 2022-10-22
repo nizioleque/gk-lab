@@ -24,11 +24,13 @@ function App() {
   const { forceRerender } = useForceRerender();
 
   const [editorMode, setEditorMode] = useState<EditorMode>(EditorMode.Draw);
-  const { polygons, addPolygon, removePolygon, setPolygons } = usePolygons();
 
   const [restrictionData, setRestrictionData] = useState<RestrictionData>(
     new RestrictionData()
   );
+
+  const { polygons, addPolygon, removePolygon, setPolygons } =
+    usePolygons(restrictionData);
 
   const { hoveredRestriction, setHoveredRestriction } = useHoveredRestriction();
 

@@ -2,9 +2,7 @@ import { Dispatch, SetStateAction } from 'react';
 import Line from '../class/Line';
 import Point from '../class/Point';
 import Polygon from '../class/Polygon';
-import {
-  PerpendicularRestriction,
-} from '../class/Restriction';
+import { PerpendicularRestriction } from '../class/Restriction';
 import RestrictionData from '../class/RestrictionData';
 import { DrawState, EditorMode, PolygonWith } from '../types';
 import {
@@ -124,7 +122,8 @@ export default function mouseDown(
         );
         return;
       }
-      removeLine(hoveredElement as PolygonWith<Line>);
+      removeLine(hoveredElement as PolygonWith<Line>, restrictionData);
+      forceRerender();
     } else {
       if (hoveredElement.polygon.lines.length <= 3) {
         setErrorText(
@@ -132,7 +131,8 @@ export default function mouseDown(
         );
         return;
       }
-      removePoint(hoveredElement as PolygonWith<Point>);
+      removePoint(hoveredElement as PolygonWith<Point>, restrictionData);
+      forceRerender();
     }
   }
 
@@ -147,6 +147,9 @@ export default function mouseDown(
     const oldEnd = hoveredLine.points[1];
     hoveredLine.setEnd(middlePoint);
     const newLine = new Line(middlePoint, oldEnd);
+
+    hoveredLine.restrictions.forEach((r) => restrictionData.delete(r));
+    forceRerender();
 
     hoveredElement.polygon.lines.splice(hoveredLineIndex + 1, 0, newLine);
   }

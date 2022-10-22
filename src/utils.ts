@@ -1,6 +1,7 @@
 import Line from './class/Line';
 import Point from './class/Point';
 import Polygon from './class/Polygon';
+import RestrictionData from './class/RestrictionData';
 import { DrawState, PolygonWith } from './types';
 
 export const randomColor = () =>
@@ -49,7 +50,10 @@ export const distSq = (point1: Point, point2: Point): number => {
   return Math.pow(point1.y - point2.y, 2) + Math.pow(point1.x - point2.x, 2);
 };
 
-export function removeLine(hoveredElement: PolygonWith<Line>) {
+export function removeLine(
+  hoveredElement: PolygonWith<Line>,
+  restrictionData: RestrictionData
+) {
   // Find middle point
   const middlePoint = middleOfLine(hoveredElement.element);
 
@@ -64,13 +68,20 @@ export function removeLine(hoveredElement: PolygonWith<Line>) {
   nextLine?.setStart(middlePoint);
   prevLine?.setEnd(middlePoint);
 
+  for (const restriction of hoveredLine.restrictions) {
+    restrictionData.delete(restriction);
+  }
+
   // Remove the hovered edge
   hoveredElement.polygon.lines = hoveredElement.polygon.lines.filter(
     (line) => line !== hoveredLine
   );
 }
 
-export function removePoint(hoveredElement: PolygonWith<Point>) {
+export function removePoint(
+  hoveredElement: PolygonWith<Point>,
+  restrictionData: RestrictionData
+) {
   // Find the two adjacent edges
   const hoveredPoint = hoveredElement.element as Point;
   const nextLine = hoveredElement.polygon.lines.find(
@@ -82,6 +93,14 @@ export function removePoint(hoveredElement: PolygonWith<Point>) {
 
   // Move the start of the next edge
   nextLine!.points[0] = prevLine!.points[0];
+
+  for (const restriction of nextLine!.restrictions) {
+    restrictionData.delete(restriction);
+  }
+
+  for (const restriction of prevLine!.restrictions) {
+    restrictionData.delete(restriction);
+  }
 
   // Remove the previous edge
   hoveredElement.polygon.lines = hoveredElement.polygon.lines.filter(
