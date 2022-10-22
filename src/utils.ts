@@ -50,12 +50,19 @@ export const distSq = (point1: Point, point2: Point): number => {
 };
 
 export function removeLine(hoveredElement: PolygonWith<Line>) {
+  // Find middle point
+  const middlePoint = middleOfLine(hoveredElement.element);
+
   // Connect the next edge to the start of the removed edge
   const hoveredLine = hoveredElement.element as Line;
   const nextLine = hoveredElement.polygon.lines.find(
     (line) => line.points[0] === hoveredLine.points[1]
   );
-  nextLine?.setStart(hoveredLine.points[0]);
+  const prevLine = hoveredElement.polygon.lines.find(
+    (line) => line.points[1] === hoveredLine.points[0]
+  );
+  nextLine?.setStart(middlePoint);
+  prevLine?.setEnd(middlePoint);
 
   // Remove the hovered edge
   hoveredElement.polygon.lines = hoveredElement.polygon.lines.filter(
