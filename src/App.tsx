@@ -5,8 +5,9 @@ import Menu from './components/Menu';
 import { EditorMode } from './types';
 import { AppContext } from './AppContext';
 import usePolygons from './hooks/usePolygons';
-import RestrictionData from './class/Restriction';
+import { RestrictionData } from './class/Restriction';
 import { SceneGenerator } from './scenes';
+import useHoveredRestriction from './hooks/useHoveredRestriction';
 
 function App() {
   const canvasContainerRef = useRef<HTMLDivElement>(null);
@@ -25,6 +26,8 @@ function App() {
   const [restrictionData, setRestrictionData] = useState<RestrictionData>(
     new RestrictionData()
   );
+
+  const { hoveredRestriction, setHoveredRestriction } = useHoveredRestriction();
 
   const applyScene = (scene: SceneGenerator) => {
     const newSceneData = scene.data();
@@ -51,6 +54,8 @@ function App() {
         removePolygon,
         applyScene,
         restrictionData,
+        hoveredRestriction,
+        setHoveredRestriction,
       }}
     >
       <div className='App'>

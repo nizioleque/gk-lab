@@ -12,8 +12,13 @@ interface CanvasProps {
 
 function Canvas({ size }: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { editorMode, polygons, addPolygon, removePolygon } =
-    useContext(AppContext);
+  const {
+    editorMode,
+    polygons,
+    addPolygon,
+    removePolygon,
+    hoveredRestriction,
+  } = useContext(AppContext);
   const ctx = () => canvasRef.current?.getContext('2d')!;
   const getMousePosition = (event: MouseEvent): Point => {
     const rect = canvasRef.current?.getBoundingClientRect()!;
@@ -23,7 +28,7 @@ function Canvas({ size }: CanvasProps) {
   const drawState: DrawState = {};
   useShiftPressed(drawState);
 
-  useEffect(() => draw(), [size, polygons]);
+  useEffect(() => draw(), [size, polygons, hoveredRestriction]);
 
   const { showError, errorText, setErrorText } = useError();
 

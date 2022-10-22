@@ -1,3 +1,5 @@
+import { useContext } from 'react';
+import { AppContext } from '../AppContext';
 import { Restriction, RestrictionType } from '../class/Restriction';
 
 interface RestrictionButtonProps {
@@ -5,8 +7,14 @@ interface RestrictionButtonProps {
 }
 
 function RestrictionButton({ restriction }: RestrictionButtonProps) {
+  const { setHoveredRestriction } = useContext(AppContext);
+
   return (
-    <div className='menu-button vertical'>
+    <div
+      className='menu-button vertical'
+      onMouseEnter={() => setHoveredRestriction(restriction)}
+      onMouseLeave={() => setHoveredRestriction(undefined)}
+    >
       <div>
         {restriction.type === RestrictionType.Length
           ? 'Długość'

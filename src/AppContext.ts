@@ -1,6 +1,6 @@
 import { createContext, Dispatch, SetStateAction } from 'react';
 import Polygon from './class/Polygon';
-import RestrictionData from './class/Restriction';
+import { Restriction, RestrictionData } from './class/Restriction';
 import { SceneGenerator } from './scenes';
 import { EditorMode } from './types';
 
@@ -12,6 +12,8 @@ interface AppContext {
   removePolygon: (polygon: Polygon) => void;
   applyScene: (scene: SceneGenerator) => void;
   restrictionData: RestrictionData;
+  hoveredRestriction: Restriction | undefined;
+  setHoveredRestriction: (restriction: Restriction | undefined) => void;
 }
 
 const appContextDefaultValue: AppContext = {
@@ -22,6 +24,8 @@ const appContextDefaultValue: AppContext = {
   removePolygon: () => {},
   applyScene: () => {},
   restrictionData: new RestrictionData(),
+  hoveredRestriction: undefined,
+  setHoveredRestriction: () => {},
 };
 
 export const AppContext = createContext<AppContext>(appContextDefaultValue);

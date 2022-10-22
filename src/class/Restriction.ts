@@ -24,7 +24,7 @@ export class Restriction {
   }
 }
 
-export default class RestrictionData {
+export class RestrictionData {
   restrictions: Restriction[] = [];
 
   add(

@@ -1,7 +1,7 @@
 import Line from './class/Line';
 import Point from './class/Point';
 import Polygon from './class/Polygon';
-import RestrictionData, { RestrictionType } from './class/Restriction';
+import { RestrictionData, RestrictionType } from './class/Restriction';
 
 export interface SceneGenerator {
   name: string;
