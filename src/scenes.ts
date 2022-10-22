@@ -92,6 +92,30 @@ const scene2: SceneGenerator = {
   data: scene2Data,
 };
 
-const scenes: SceneGenerator[] = [scene2, scene1];
+const scene3Data = () => {
+  const point1 = new Point(450, 400);
+  const point2 = new Point(200, 700);
+  const point3 = new Point(600, 600);
+
+  const line1 = new Line(point1, point2);
+  const line2 = new Line(point2, point3);
+  const line3 = new Line(point3, point1);
+
+  const polygon1 = new Polygon([line1, line2, line3]);
+
+  const restrictionData = new RestrictionData();
+  restrictionData.add(
+    new LengthRestriction({ polygon: polygon1, element: line3 }, 150)
+  );
+
+  return { polygons: [polygon1], restrictionData };
+};
+
+const scene3: SceneGenerator = {
+  name: 'Trójkąt z ograniczeniem długości',
+  data: scene3Data,
+};
+
+const scenes: SceneGenerator[] = [scene2, scene1, scene3];
 
 export default scenes;

@@ -17,7 +17,7 @@ export default class Point {
     if (this.hover) ctx.fillStyle = accentColor;
     else ctx.fillStyle = 'black';
     ctx.beginPath();
-    ctx.arc(this.x, this.y, pointRadius, 0, Math.PI * 2);
+    ctx.arc(this.x, this.y, pointRadius + (this.hover ? 2 : 0), 0, Math.PI * 2);
     ctx.fill();
   }
 

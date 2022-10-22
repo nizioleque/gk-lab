@@ -8,19 +8,14 @@ export enum RestrictionType {
 }
 
 export class Restriction {
-  // type: RestrictionType;
-  // members: [PolygonWith<Line>, PolygonWith<Line> | undefined];
   members: PolygonWith<Line>[];
 
   constructor(members: PolygonWith<Line>[]) {
     this.members = members;
   }
 
-  // otherMember(member: PolygonWith<Line>): PolygonWith<Line> | undefined {
-  //   return member === this.members[1] ? this.members[0] : this.members?.[1];
-  // }
-
-  apply(mousePoint: Point, startPoint?: Point): boolean {
+  apply(mousePoint: Point, direction: 0 | 1, sourceLines: Line[]): boolean {
+    console.error('Restriction class apply method called!');
     return false;
   }
 }
@@ -33,10 +28,11 @@ export class LengthRestriction extends Restriction {
     this.length = length;
   }
 
-  apply(mousePoint: Point, startPoint?: Point): boolean {
+  // return: 'changed' -- true is 'change was required'
+  apply(mousePoint: Point, direction: 0 | 1, sourceLines: Line[]): boolean {
     const actualLength = this.members[0].element.length();
     if (Math.abs(actualLength - this.length) < 0.01) {
-      console.log('length is correct');
+      // console.log('length is correct');
       return false;
     }
 
@@ -45,45 +41,23 @@ export class LengthRestriction extends Restriction {
     );
 
     // modify length to adjust
+    const otherDirection = (direction + 1) % 2;
+    const constantPoint = this.members[0].element.points[direction];
+    const movingPoint = this.members[0].element.points[otherDirection];
+
+    const facingDown = movingPoint.y > constantPoint.y;
+    console.log('facingDown:', facingDown);
+
     const line = this.members[0].element;
-    const isStartPointInLine: boolean = startPoint
-      ? line.points.includes(startPoint)
-      : false;
-
-    if (isStartPointInLine) {
-      let dragPointIndex: number = line.points.indexOf(startPoint!);
-      const constantPointIndex = (dragPointIndex + 1) % 2;
-      const constantPoint = line.points[constantPointIndex];
-      console.log('start point in line!', dragPointIndex, constantPointIndex);
-
-      const deltaX = mousePoint.x - constantPoint.x;
-      const deltaY = mousePoint.y - constantPoint.y;
-
-      const a = deltaY / deltaX;
-      const alpha = Math.atan(a);
-
-      const newX = this.length * Math.cos(alpha);
-      const newY = this.length * Math.sin(alpha);
-      const newPointX =
-        line.points[constantPointIndex].x +
-        newX * (mousePoint.x < constantPoint.x ? -1 : 1);
-      const newPointY =
-        line.points[constantPointIndex].y +
-        newY * (mousePoint.x < constantPoint.x ? -1 : 1);
-      line.points[dragPointIndex].x = newPointX;
-      line.points[dragPointIndex].y = newPointY;
-    } else {
-      const startPointIndex = 0;
-      console.log('start point not in line!', startPointIndex);
-      const otherPointIndex = (startPointIndex + 1) % 2;
-      const { dX, dY } = aToXY(line.calculateAB().a, this.length);
-      const newPointX =
-        line.points[startPointIndex].x + dX * (otherPointIndex === 0 ? -1 : 1);
-      const newPointY =
-        line.points[startPointIndex].y + dY * (otherPointIndex === 0 ? -1 : 1);
-      line.points[otherPointIndex].x = newPointX;
-      line.points[otherPointIndex].y = newPointY;
-    }
+    console.log('start point not in line!', direction);
+    let { dX, dY } = aToXY(line.calculateAB().a, this.length);
+    console.log('a', line.calculateAB().a);
+    console.log('x,y', dX, dY);
+    const newPointX = constantPoint.x + dX;
+    const newPointY = constantPoint.y + Math.abs(dY) * (facingDown ? 1 : -1);
+    console.log('new point', newPointX, newPointY);
+    movingPoint.x = newPointX;
+    movingPoint.y = newPointY;
 
     return true;
   }
@@ -94,20 +68,50 @@ export class PerpendicularRestriction extends Restriction {
     super([member1, member2]);
   }
 
-  apply(): boolean {
-    const a1 = this.members[0].element.calculateAB().a;
-    const a2Current = this.members[1].element.calculateAB().a;
+  apply(mousePoint: Point, direction: 0 | 1, sourceLines: Line[]): boolean {
+    let startMember: 0 | 1 = 0;
+    if (sourceLines.find((line) => line === this.members[1].element))
+      startMember = 1;
+
+    const otherMember = this.members[startMember === 0 ? 1 : 0];
+
+    // console.log('startMember', startMember);
+
+    const a1 = this.members[startMember].element.calculateAB().a;
+    const a2Current = otherMember.element.calculateAB().a;
     const a2New = -1 / a1;
 
     if (Math.abs(a2Current - a2New) < 0.01) {
+      // console.log('perpendicularity is correct');
       return false;
     }
 
-    // modify angle to adjust
-    const constantPoint = this.members[1].element.points[0];
-    const movingPoint = this.members[1].element.points[1];
+    if (a2New === Infinity && a2Current > 200) {
+      // console.log('perpendicularity is correct -- +Infinity');
+      return false;
+    }
 
-    const { dX, dY } = aToXY(a2New, this.members[1].element.length());
+    if (a2New === -Infinity && a2Current < -200) {
+      // console.log('perpendicularity is correct -- -Infinity');
+      return false;
+    }
+
+    if (
+      (a2New === -Infinity && a2Current === Infinity) ||
+      (a2New === Infinity && a2Current === -Infinity)
+    ) {
+      console.log('perpendicularity is correct -- opposite infinities');
+      return false;
+    }
+
+    console.log(`adjusting angle: expected: ${a2New}, actual: ${a2Current}`);
+
+    // modify angle to adjust
+    const constantPoint = otherMember.element.points[0];
+    const movingPoint = otherMember.element.points[1];
+    // const facingDown = movingPoint.y > constantPoint.y;
+
+    const { dX, dY } = aToXY(a2New, otherMember.element.length());
     movingPoint.x = constantPoint.x + dX;
     movingPoint.y = constantPoint.y + dY;
 

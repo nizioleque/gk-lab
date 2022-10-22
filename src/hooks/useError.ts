@@ -18,7 +18,7 @@ export default function useError(): {
       const timeout2 = setTimeout(() => _setErrorText(undefined), 200);
       timeouts.push(timeout2);
       setTimeouts([...timeouts, timeout2]);
-    }, 1500);
+    }, 3000);
     setTimeouts([...timeouts, timeout1]);
   };
 
