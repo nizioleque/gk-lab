@@ -4,19 +4,20 @@ import { EditorMode } from '../types';
 
 interface ModeButtonProps {
   text: string;
-  mode: EditorMode;
+  mode?: EditorMode;
+  onClick?: () => void;
 }
 
-function ModeButton({ text, mode }: ModeButtonProps) {
+function ModeButton({ text, mode, onClick }: ModeButtonProps) {
   const { editorMode, setEditorMode } = useContext(AppContext);
 
-  const index = mode + 1;
+  const index = mode !== undefined ? mode + 1 : undefined;
 
   useEffect(() => {
     function keyboardShortcut(event: KeyboardEvent) {
       if (editorMode === EditorMode.SetLength) return;
-      if (event.key === index.toString()) {
-        setEditorMode(mode);
+      if (event.key === index?.toString()) {
+        mode !== undefined && setEditorMode(mode);
       }
     }
     document.addEventListener('keydown', keyboardShortcut);
@@ -25,10 +26,13 @@ function ModeButton({ text, mode }: ModeButtonProps) {
 
   return (
     <button
-      onClick={() => setEditorMode(mode)}
+      onClick={() => {
+        mode !== undefined && setEditorMode(mode);
+        onClick && onClick();
+      }}
       className={`menu-button ${editorMode === mode ? 'active' : ''}`}
     >
-      <div className='shortcut-key key'>{index}</div>
+      {index && <div className='shortcut-key key'>{index}</div>}
       {text}
     </button>
   );

@@ -14,6 +14,7 @@ import Point from './class/Point';
 
 function App() {
   const canvasContainerRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
   const updateCanvasSize = () => {
     if (!canvasContainerRef.current) return;
@@ -78,12 +79,14 @@ function App() {
         setLengthRestrictionLine,
         addLengthRestriction,
         forceRerender,
+        canvasRef,
+        canvasSize,
       }}
     >
       <div className='App'>
         <Menu />
         <div className='canvas-container' ref={canvasContainerRef}>
-          <Canvas size={canvasSize} />
+          <Canvas />
         </div>
       </div>
     </AppContext.Provider>

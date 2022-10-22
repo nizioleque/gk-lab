@@ -1,4 +1,4 @@
-import { useEffect, useRef, MouseEvent, useContext } from 'react';
+import { useEffect, MouseEvent, useContext } from 'react';
 import { AppContext } from '../AppContext';
 import Point from '../class/Point';
 import useError from '../hooks/useError';
@@ -6,13 +6,13 @@ import useHandlers from '../hooks/useHandlers';
 import useShiftPressed from '../hooks/useShiftPressed';
 import { DrawState } from '../types';
 
-interface CanvasProps {
-  size: { width: number; height: number };
-}
-
-function Canvas({ size }: CanvasProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { polygons, hoveredRestriction } = useContext(AppContext);
+function Canvas() {
+  const {
+    polygons,
+    hoveredRestriction,
+    canvasRef,
+    canvasSize: size,
+  } = useContext(AppContext);
   const ctx = () => canvasRef.current?.getContext('2d')!;
   const getMousePosition = (event: MouseEvent): Point => {
     const rect = canvasRef.current?.getBoundingClientRect()!;
@@ -26,7 +26,8 @@ function Canvas({ size }: CanvasProps) {
 
   const draw = () => _draw(ctx());
   const _draw = (ctx: CanvasRenderingContext2D) => {
-    ctx.clearRect(0, 0, size.width, size.height);
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, size.width, size.height);
     for (const polygon of polygons) polygon.draw(ctx);
     drawState.currentPolygon?.draw(ctx);
     drawState.drawingLine?.draw(ctx);

@@ -7,6 +7,7 @@ import ModeButton from './ModeButton';
 import SceneButton from './SceneButton';
 import scenes from '../scenes';
 import RestrictionButton from './RestrictionButton';
+import bresenham from '../bresenham';
 
 function Menu() {
   const {
@@ -15,6 +16,9 @@ function Menu() {
     lengthInputRef,
     addLengthRestriction,
     lengthRestrictionLine,
+    canvasRef,
+    canvasSize,
+    polygons,
   } = useContext(AppContext);
 
   useEffect(() => {
@@ -88,13 +92,39 @@ function Menu() {
               prostopadłości.
             </div>
           </AnimateHeight>
+
+          <h5>Zapisz jako obraz</h5>
+          <ModeButton
+            text='Algorytm biblioteczny'
+            onClick={() => {
+              const link = document.createElement('a');
+              link.download = 'Norbert Niziołek - algorytm biblioteczny.png';
+              link.href = canvasRef.current?.toDataURL() ?? '';
+              link.click();
+            }}
+          />
+          <ModeButton
+            text='Algorytm Bresenhama'
+            onClick={() => {
+              const link = document.createElement('a');
+              const canvas = document.createElement('canvas');
+              canvas.height = canvasSize.height;
+              canvas.width = canvasSize.width;
+              bresenham(canvas, polygons);
+              link.download = 'Norbert Niziołek - algorytm Bresenhama.png';
+              link.href = canvas.toDataURL() ?? '';
+              link.click();
+            }}
+          />
         </div>
       </div>
       <div className='menu-section'>
         <h3>Ograniczenia</h3>
         <div className='buttons'>
           {restrictionData.restrictions.length === 0 && (
-            <div className='menu-caption center'>Brak zdefiniowanych ograniczeń</div>
+            <div className='menu-caption center'>
+              Brak zdefiniowanych ograniczeń
+            </div>
           )}
           {restrictionData.restrictions.map((r, i) => (
             <RestrictionButton key={i} restriction={r} />

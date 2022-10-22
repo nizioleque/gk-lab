@@ -23,6 +23,8 @@ interface AppContext {
   >;
   addLengthRestriction: () => void;
   forceRerender: () => void;
+  canvasRef: RefObject<HTMLCanvasElement>;
+  canvasSize: { width: number; height: number };
 }
 
 const appContextDefaultValue: AppContext = {
@@ -40,6 +42,8 @@ const appContextDefaultValue: AppContext = {
   setLengthRestrictionLine: () => {},
   addLengthRestriction: () => {},
   forceRerender: () => {},
+  canvasRef: { current: null },
+  canvasSize: { width: 0, height: 0 },
 };
 
 export const AppContext = createContext<AppContext>(appContextDefaultValue);
