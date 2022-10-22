@@ -3,33 +3,31 @@ import Polygon from '../class/Polygon';
 import mouseDown from '../handlers/mouseDown';
 import mouseMove from '../handlers/mouseMove';
 import mouseUp from '../handlers/mouseUp';
-import { DrawState, EditorMode } from '../types';
-import { MouseEvent } from 'react';
+import { DrawState } from '../types';
+import { MouseEvent, useContext } from 'react';
+import { AppContext } from '../AppContext';
 
 interface HandlersProps {
-  editorMode: EditorMode;
   drawState: DrawState;
   polygons: Polygon[];
-  addPolygon: (polygon: Polygon) => void;
-  removePolygon: (polygon: Polygon) => void;
   setErrorText: (text: string) => void;
   draw: () => void;
   getMousePosition: (event: MouseEvent) => Point;
 }
 
 export default function useHandlers({
-  editorMode,
   drawState,
   polygons,
-  addPolygon,
-  removePolygon,
   setErrorText,
   draw,
   getMousePosition,
 }: HandlersProps) {
+  const { editorMode, addPolygon, removePolygon, restrictionData } =
+    useContext(AppContext);
+
   const handleMouseMove = (event: MouseEvent) => {
     const mousePoint = getMousePosition(event);
-    mouseMove(editorMode, mousePoint, drawState, polygons);
+    mouseMove(editorMode, mousePoint, drawState, polygons, restrictionData, setErrorText);
     draw();
   };
 

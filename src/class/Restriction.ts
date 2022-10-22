@@ -1,5 +1,6 @@
 import { PolygonWith } from '../types';
 import Line from './Line';
+import Point from './Point';
 
 export enum RestrictionType {
   Length,
@@ -19,7 +20,7 @@ export class Restriction {
     return member === this.members[1] ? this.members[0] : this.members?.[1];
   }
 
-  apply(): boolean {
+  apply(startPointIndex: number): boolean {
     return false;
   }
 }
@@ -32,9 +33,33 @@ export class LengthRestriction extends Restriction {
     this.length = length;
   }
 
-  apply(): boolean {
-    // const length = this.members[0].element.length();
-    return false;
+  apply(startPointIndex: number): boolean {
+    const actualLength = this.members[0].element.length();
+    if (Math.abs(actualLength - this.length) < 0.01) {
+      console.log('length is correct');
+      return false;
+    }
+
+    console.log(
+      `adjusting length: expected: ${this.length}, actual: ${actualLength}`
+    );
+
+    // modify length to adjust
+    const line = this.members[0].element;
+    const otherPointIndex = (startPointIndex + 1) % 2;
+    const alpha = Math.atan(line.a);
+    // const oldX = line.points[1].x - line.points[0].x;
+    // const oldY = line.points[1].y - line.points[0].y;
+    const newX = this.length * Math.cos(alpha);
+    const newY = this.length * Math.sin(alpha);
+    const newPointX =
+      line.points[startPointIndex].x + newX * (otherPointIndex === 0 ? -1 : 1);
+    const newPointY =
+      line.points[startPointIndex].y + newY * (otherPointIndex === 0 ? -1 : 1);
+    line.points[otherPointIndex].x = newPointX;
+    line.points[otherPointIndex].y = newPointY;
+
+    return true;
   }
 }
 
@@ -78,17 +103,24 @@ export class RestrictionData {
     this.restrictions = this.restrictions.filter((r) => r !== restriction);
   }
 
-  applyAll(): boolean {
+  applyAll(startPoint: Point): boolean {
     let iters = 0;
 
     while (true) {
       let changed = false;
+
       for (const restriction of this.restrictions) {
-        const result = restriction.apply();
+        const startPointIndex =
+          restriction.members[0].element.points.indexOf(startPoint);
+
+        const result = restriction.apply(
+          startPointIndex === -1 ? 0 : startPointIndex
+        );
         if (result) changed = true;
       }
+
       if (!changed) {
-        console.log('no change -- success');
+        console.log(`no change after ${iters} iterations -- success`);
         return true;
       }
 

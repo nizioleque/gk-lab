@@ -1,6 +1,7 @@
 import Line from '../class/Line';
 import Point from '../class/Point';
 import Polygon from '../class/Polygon';
+import { RestrictionData } from '../class/Restriction';
 import { DrawState, EditorMode } from '../types';
 import { canClosePolygon, findHoveredElement } from '../utils';
 
@@ -8,7 +9,9 @@ export default function mouseMove(
   editorMode: EditorMode,
   mousePoint: Point,
   drawState: DrawState,
-  polygons: Polygon[]
+  polygons: Polygon[],
+  restrictionData: RestrictionData,
+  setErrorText: (text: string) => void
 ) {
   switch (editorMode) {
     case EditorMode.Draw:
@@ -66,6 +69,13 @@ export default function mouseMove(
       drawState.dragStart = mousePoint;
 
       // adjustOtherPolygons(drawState.draggedLine.polygon);
+      const success = restrictionData.applyAll(
+        drawState.draggedLine.element.points[0]
+      );
+      if (!success)
+        setErrorText(
+          'Nie udało się zaaplikować ograniczeń - ograniczenia mogą być niemożliwe do zrealizowania'
+        );
     } else if (drawState.draggedPoint) {
       // Drag one point
       drawState.draggedPoint.element.x = mousePoint.x;
@@ -73,6 +83,11 @@ export default function mouseMove(
       drawState.draggedPoint.element.hover = true;
 
       // adjustOtherPolygons(drawState.draggedPoint.polygon);
+      const success = restrictionData.applyAll(drawState.draggedPoint.element);
+      if (!success)
+        setErrorText(
+          'Nie udało się zaaplikować ograniczeń - ograniczenia mogą być niemożliwe do zrealizowania'
+        );
     } else {
       highlight();
     }

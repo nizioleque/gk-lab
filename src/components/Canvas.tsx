@@ -13,10 +13,7 @@ interface CanvasProps {
 function Canvas({ size }: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const {
-    editorMode,
     polygons,
-    addPolygon,
-    removePolygon,
     hoveredRestriction,
   } = useContext(AppContext);
   const ctx = () => canvasRef.current?.getContext('2d')!;
@@ -41,11 +38,8 @@ function Canvas({ size }: CanvasProps) {
   };
 
   const { handleMouseDown, handleMouseMove, handleMouseUp } = useHandlers({
-    editorMode,
     drawState,
     polygons,
-    addPolygon,
-    removePolygon,
     setErrorText,
     draw,
     getMousePosition,
