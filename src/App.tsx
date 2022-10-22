@@ -5,11 +5,11 @@ import Menu from './components/Menu';
 import { EditorMode } from './types';
 import { AppContext } from './AppContext';
 import usePolygons from './hooks/usePolygons';
-import { RestrictionData } from './class/Restriction';
 import { SceneGenerator } from './scenes';
 import useHoveredRestriction from './hooks/useHoveredRestriction';
 import useAddLengthRestriction from './hooks/useAddLengthRestriction';
 import useForceRerender from './hooks/useForceRerender';
+import RestrictionData from './class/RestrictionData';
 
 function App() {
   const canvasContainerRef = useRef<HTMLDivElement>(null);

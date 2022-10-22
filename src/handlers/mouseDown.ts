@@ -4,8 +4,8 @@ import Point from '../class/Point';
 import Polygon from '../class/Polygon';
 import {
   PerpendicularRestriction,
-  RestrictionData,
 } from '../class/Restriction';
+import RestrictionData from '../class/RestrictionData';
 import { DrawState, EditorMode, PolygonWith } from '../types';
 import {
   canClosePolygon,

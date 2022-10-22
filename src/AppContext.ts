@@ -1,7 +1,8 @@
 import { createContext, Dispatch, RefObject, SetStateAction } from 'react';
 import Line from './class/Line';
 import Polygon from './class/Polygon';
-import { Restriction, RestrictionData } from './class/Restriction';
+import { Restriction } from './class/Restriction';
+import RestrictionData from './class/RestrictionData';
 import { SceneGenerator } from './scenes';
 import { EditorMode, PolygonWith } from './types';
 

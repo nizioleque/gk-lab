@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import Line from '../class/Line';
-import { LengthRestriction, RestrictionData } from '../class/Restriction';
+import { LengthRestriction } from '../class/Restriction';
+import RestrictionData from '../class/RestrictionData';
 import { PolygonWith } from '../types';
 
 export default function useAddLengthRestriction(

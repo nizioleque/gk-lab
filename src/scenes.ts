@@ -4,8 +4,8 @@ import Polygon from './class/Polygon';
 import {
   LengthRestriction,
   PerpendicularRestriction,
-  RestrictionData,
 } from './class/Restriction';
+import RestrictionData from './class/RestrictionData';
 
 export interface SceneGenerator {
   name: string;

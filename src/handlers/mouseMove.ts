@@ -1,7 +1,7 @@
 import Line from '../class/Line';
 import Point from '../class/Point';
 import Polygon from '../class/Polygon';
-import { RestrictionData } from '../class/Restriction';
+import RestrictionData from '../class/RestrictionData';
 import { DrawState, EditorMode, PolygonWith } from '../types';
 import { canClosePolygon, findHoveredElement } from '../utils';
 
