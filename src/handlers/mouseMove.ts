@@ -9,30 +9,33 @@ export default function mouseMove(
   mousePoint: Point,
   drawState: DrawState,
   polygons: Polygon[]
-): boolean {
+) {
   switch (editorMode) {
     case EditorMode.Draw:
-      return addMode();
+      addMode();
+      break;
     case EditorMode.Move:
-      return moveMode();
+      moveMode();
+      break;
     case EditorMode.Delete:
-      return deleteMode();
+      deleteMode();
+      break;
     case EditorMode.Split:
-      return splitMode();
+      splitMode();
+      break;
     case EditorMode.SetLength:
-      return setLengthMode();
+      setLengthMode();
+      break;
     case EditorMode.SetPerpendicular:
-      return setPerpendicularMode();
-    default:
-      return false;
+      setPerpendicularMode();
+      break;
   }
 
   function addMode() {
-    if (!drawState.drawingStart) return false;
+    if (!drawState.drawingStart) return;
     drawState.drawingLine!.setEnd(mousePoint);
     if (canClosePolygon(drawState))
       drawState.polygonStart?.isAt(mousePoint, true);
-    return true;
   }
 
   function moveMode() {
@@ -49,8 +52,6 @@ export default function mouseMove(
 
       drawState.dragStart = mousePoint;
       draggedElement.polygon.highlightAll();
-
-      return true;
     }
 
     if (drawState.draggedLine) {
@@ -69,38 +70,32 @@ export default function mouseMove(
       drawState.draggedPoint.element.y = mousePoint.y;
       drawState.draggedPoint.element.hover = true;
     } else {
-      return highlight();
+      highlight();
     }
-
-    return true;
   }
 
   function deleteMode() {
-    return highlight();
+    highlight();
   }
 
   function splitMode() {
-    return highlight(true);
+    highlight(true);
   }
 
-  function setLengthMode() {
-    return false;
-  }
+  function setLengthMode() {}
 
-  function setPerpendicularMode() {
-    return false;
-  }
+  function setPerpendicularMode() {}
 
-  function highlight(edgeOnly: boolean = false): boolean {
+  function highlight(edgeOnly: boolean = false) {
     const hoveredElement = findHoveredElement(polygons, mousePoint);
-    if (!hoveredElement) return true;
+    if (!hoveredElement) return;
 
     if (edgeOnly) {
       if (hoveredElement.element instanceof Line) {
         hoveredElement.element.hover = true;
-        return true;
+        return;
       }
-      return false;
+      return;
     }
 
     if (drawState.isShiftPressed) {
@@ -108,6 +103,5 @@ export default function mouseMove(
     } else {
       hoveredElement.element.hover = true;
     }
-    return true;
   }
 }

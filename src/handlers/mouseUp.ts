@@ -5,49 +5,42 @@ export default function mouseUp(
   editorMode: EditorMode,
   mousePoint: Point,
   drawState: DrawState
-): boolean {
+) {
   switch (editorMode) {
     case EditorMode.Draw:
-      return addMode();
+      addMode();
+      break;
     case EditorMode.Move:
-      return moveMode();
+      moveMode();
+      break;
     case EditorMode.Delete:
-      return deleteMode();
+      deleteMode();
+      break;
     case EditorMode.Split:
-      return splitMode();
+      splitMode();
+      break;
     case EditorMode.SetLength:
-      return setLengthMode();
+      setLengthMode();
+      break;
     case EditorMode.SetPerpendicular:
-      return setPerpendicularMode();
-    default:
-      return false;
+      setPerpendicularMode();
+      break;
   }
 
-  function addMode() {
-    return false;
-  }
+  function addMode() {}
 
   function moveMode() {
     drawState.draggedPoint = undefined;
     drawState.draggedLine = undefined;
     drawState.dragStart = undefined;
     drawState.isDraggingPolygon = undefined;
-    return true;
   }
 
-  function deleteMode() {
-    return false;
-  }
+  function deleteMode() {}
 
-  function splitMode() {
-    return false;
-  }
+  function splitMode() {}
 
-  function setLengthMode() {
-    return false;
-  }
+  function setLengthMode() {}
 
-  function setPerpendicularMode() {
-    return false;
-  }
+  function setPerpendicularMode() {}
 }

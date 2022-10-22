@@ -29,13 +29,13 @@ export default function useHandlers({
 }: HandlersProps) {
   const handleMouseMove = (event: MouseEvent) => {
     const mousePoint = getMousePosition(event);
-    const redraw = mouseMove(editorMode, mousePoint, drawState, polygons);
-    if (redraw) draw();
+    mouseMove(editorMode, mousePoint, drawState, polygons);
+    draw();
   };
 
   const handleMouseDown = (event: MouseEvent) => {
     const mousePoint = getMousePosition(event);
-    const redraw = mouseDown(
+    mouseDown(
       editorMode,
       mousePoint,
       drawState,
@@ -44,13 +44,13 @@ export default function useHandlers({
       removePolygon,
       setErrorText
     );
-    if (redraw) draw();
+    draw();
   };
 
   const handleMouseUp = (event: MouseEvent) => {
     const mousePoint = getMousePosition(event);
-    const redraw = mouseUp(editorMode, mousePoint, drawState);
-    if (redraw) draw();
+    mouseUp(editorMode, mousePoint, drawState);
+    draw();
   };
 
   return { handleMouseDown, handleMouseMove, handleMouseUp };

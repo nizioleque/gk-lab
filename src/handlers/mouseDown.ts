@@ -20,22 +20,26 @@ export default function mouseDown(
   addPolygon: (polygon: Polygon) => void,
   removePolygon: (polygon: Polygon) => void,
   setErrorText: (text: string) => void
-): boolean {
+) {
   switch (editorMode) {
     case EditorMode.Draw:
-      return addMode();
+      addMode();
+      break;
     case EditorMode.Move:
-      return moveMode();
+      moveMode();
+      break;
     case EditorMode.Delete:
-      return deleteMode();
+      deleteMode();
+      break;
     case EditorMode.Split:
-      return splitMode();
+      splitMode();
+      break;
     case EditorMode.SetLength:
-      return setLengthMode();
+      setLengthMode();
+      break;
     case EditorMode.SetPerpendicular:
-      return setPerpendicularMode();
-    default:
-      return false;
+      setPerpendicularMode();
+      break;
   }
 
   function addMode() {
@@ -77,7 +81,6 @@ export default function mouseDown(
         );
       }
     }
-    return true;
   }
 
   function moveMode() {
@@ -92,24 +95,22 @@ export default function mouseDown(
       drawState.draggedLine.element.hover = true;
       drawState.dragStart = mousePoint;
     }
-    if (!drawState.draggedPoint && !drawState.draggedLine) return true;
+    if (!drawState.draggedPoint && !drawState.draggedLine) return;
 
     if (drawState.isShiftPressed) {
       drawState.dragStart = mousePoint;
       drawState.isDraggingPolygon = true;
       (drawState.draggedLine || drawState.draggedPoint)!.polygon.highlightAll();
     }
-
-    return true;
   }
 
   function deleteMode() {
     const hoveredElement = findHoveredElement(polygons, mousePoint);
-    if (!hoveredElement) return false;
+    if (!hoveredElement) return;
 
     if (drawState.isShiftPressed) {
       removePolygon(hoveredElement.polygon);
-      return true;
+      return;
     }
 
     if (hoveredElement.element instanceof Line) {
@@ -117,7 +118,7 @@ export default function mouseDown(
         setErrorText(
           'Nie można usunąć krawędzi - ten wielokąt ma za mało krawędzi'
         );
-        return false;
+        return;
       }
       removeLine(hoveredElement as PolygonWith<Line>);
     } else {
@@ -125,17 +126,15 @@ export default function mouseDown(
         setErrorText(
           'Nie można usunąć wierzchołka - ten wielokąt ma za mało krawędzi'
         );
-        return false;
+        return;
       }
       removePoint(hoveredElement as PolygonWith<Point>);
     }
-
-    return true;
   }
 
   function splitMode() {
     const hoveredElement = findHoveredElement(polygons, mousePoint, true);
-    if (!hoveredElement) return false;
+    if (!hoveredElement) return;
 
     const hoveredLine = hoveredElement.element as Line;
     const hoveredLineIndex = hoveredElement.polygon.lines.indexOf(hoveredLine);
@@ -146,14 +145,9 @@ export default function mouseDown(
     const newLine = new Line(middlePoint, oldEnd);
 
     hoveredElement.polygon.lines.splice(hoveredLineIndex + 1, 0, newLine);
-    return true;
   }
 
-  function setLengthMode() {
-    return false;
-  }
+  function setLengthMode() {}
 
-  function setPerpendicularMode() {
-    return false;
-  }
+  function setPerpendicularMode() {}
 }
