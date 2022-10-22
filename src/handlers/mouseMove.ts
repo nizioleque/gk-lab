@@ -113,6 +113,10 @@ export default function mouseMove(
 
   function setPerpendicularMode() {
     highlight(true);
+
+    if (drawState.restrictionFirstLine) {
+      drawState.restrictionFirstLine.element.hover = true;
+    }
   }
 
   function highlight(edgeOnly: boolean = false) {

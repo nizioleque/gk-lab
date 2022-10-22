@@ -33,6 +33,7 @@ function Menu() {
         <h3>Narzędzia</h3>
         <div className='buttons'>
           <ModeButton text='Rysowanie' mode={EditorMode.Draw} />
+
           <ModeButton text='Przesuwanie' mode={EditorMode.Move} />
           <AnimateHeight
             height={editorMode === EditorMode.Move ? 'auto' : 0}
@@ -44,6 +45,7 @@ function Menu() {
               wielokąt
             </div>
           </AnimateHeight>
+
           <ModeButton text='Usuwanie' mode={EditorMode.Delete} />
           <AnimateHeight
             height={editorMode === EditorMode.Delete ? 'auto' : 0}
@@ -55,8 +57,11 @@ function Menu() {
               wielokąt
             </div>
           </AnimateHeight>
+
           <ModeButton text='Podział krawędzi' mode={EditorMode.Split} />
+
           <h5>Nowe ograniczenie</h5>
+
           <ModeButton text='Długość' mode={EditorMode.SetLength} />
           <AnimateHeight
             height={editorMode === EditorMode.SetLength ? 'auto' : 0}
@@ -73,6 +78,16 @@ function Menu() {
           </AnimateHeight>
 
           <ModeButton text='Prostopadłość' mode={EditorMode.SetPerpendicular} />
+          <AnimateHeight
+            height={editorMode === EditorMode.SetPerpendicular ? 'auto' : 0}
+            duration={300}
+            easing='ease-in-out'
+          >
+            <div className='menu-caption'>
+              Kliknij na dwie krawędzie, aby utworzyć między nimi ograniczenie
+              prostopadłości.
+            </div>
+          </AnimateHeight>
         </div>
       </div>
       <div className='menu-section'>

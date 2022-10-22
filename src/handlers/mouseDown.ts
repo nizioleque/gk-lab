@@ -2,6 +2,10 @@ import { Dispatch, SetStateAction } from 'react';
 import Line from '../class/Line';
 import Point from '../class/Point';
 import Polygon from '../class/Polygon';
+import {
+  PerpendicularRestriction,
+  RestrictionData,
+} from '../class/Restriction';
 import { DrawState, EditorMode, PolygonWith } from '../types';
 import {
   canClosePolygon,
@@ -23,7 +27,9 @@ export default function mouseDown(
   setErrorText: (text: string) => void,
   setLengthRestrictionLine: Dispatch<
     SetStateAction<PolygonWith<Line> | undefined>
-  >
+  >,
+  restrictionData: RestrictionData,
+  forceRerender: () => void
 ) {
   switch (editorMode) {
     case EditorMode.Draw:
@@ -152,5 +158,23 @@ export default function mouseDown(
     setLengthRestrictionLine(hoveredElement as PolygonWith<Line>);
   }
 
-  function setPerpendicularMode() {}
+  function setPerpendicularMode() {
+    const hoveredElement = findHoveredElement(polygons, mousePoint, true);
+    if (!hoveredElement) return;
+
+    if (!drawState.restrictionFirstLine) {
+      // First line
+      drawState.restrictionFirstLine = hoveredElement as PolygonWith<Line>;
+    } else {
+      // Second line
+      restrictionData.add(
+        new PerpendicularRestriction(
+          drawState.restrictionFirstLine,
+          hoveredElement as PolygonWith<Line>
+        )
+      );
+      drawState.restrictionFirstLine = undefined;
+      forceRerender();
+    }
+  }
 }

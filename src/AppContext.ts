@@ -21,6 +21,7 @@ interface AppContext {
     SetStateAction<PolygonWith<Line> | undefined>
   >;
   addLengthRestriction: () => void;
+  forceRerender: () => void;
 }
 
 const appContextDefaultValue: AppContext = {
@@ -37,6 +38,7 @@ const appContextDefaultValue: AppContext = {
   lengthRestrictionLine: undefined,
   setLengthRestrictionLine: () => {},
   addLengthRestriction: () => {},
+  forceRerender: () => {},
 };
 
 export const AppContext = createContext<AppContext>(appContextDefaultValue);

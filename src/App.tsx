@@ -9,6 +9,7 @@ import { RestrictionData } from './class/Restriction';
 import { SceneGenerator } from './scenes';
 import useHoveredRestriction from './hooks/useHoveredRestriction';
 import useAddLengthRestriction from './hooks/useAddLengthRestriction';
+import useForceRerender from './hooks/useForceRerender';
 
 function App() {
   const canvasContainerRef = useRef<HTMLDivElement>(null);
@@ -20,6 +21,7 @@ function App() {
       height: canvasContainerRef.current.offsetHeight,
     });
   };
+  const { forceRerender } = useForceRerender();
 
   const [editorMode, setEditorMode] = useState<EditorMode>(EditorMode.Draw);
   const { polygons, addPolygon, removePolygon, setPolygons } = usePolygons();
@@ -69,6 +71,7 @@ function App() {
         lengthRestrictionLine,
         setLengthRestrictionLine,
         addLengthRestriction,
+        forceRerender,
       }}
     >
       <div className='App'>

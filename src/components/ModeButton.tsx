@@ -14,13 +14,14 @@ function ModeButton({ text, mode }: ModeButtonProps) {
 
   useEffect(() => {
     function keyboardShortcut(event: KeyboardEvent) {
+      if (editorMode === EditorMode.SetLength) return;
       if (event.key === index.toString()) {
         setEditorMode(mode);
       }
     }
     document.addEventListener('keydown', keyboardShortcut);
     return () => document.removeEventListener('keydown', keyboardShortcut);
-  }, []);
+  }, [editorMode]);
 
   return (
     <button

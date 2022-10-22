@@ -29,6 +29,7 @@ export default function useHandlers({
     restrictionData,
     lengthRestrictionLine,
     setLengthRestrictionLine,
+    forceRerender,
   } = useContext(AppContext);
 
   const handleMouseMove = (event: MouseEvent) => {
@@ -55,7 +56,9 @@ export default function useHandlers({
       addPolygon,
       removePolygon,
       setErrorText,
-      setLengthRestrictionLine
+      setLengthRestrictionLine,
+      restrictionData,
+      forceRerender
     );
     draw();
   };
