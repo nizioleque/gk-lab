@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { AppContext } from '../AppContext';
 import './Menu.css';
 import { EditorMode } from '../types';
@@ -9,7 +9,23 @@ import scenes from '../scenes';
 import RestrictionButton from './RestrictionButton';
 
 function Menu() {
-  const { editorMode, restrictionData } = useContext(AppContext);
+  const {
+    editorMode,
+    restrictionData,
+    lengthInputRef,
+    addLengthRestriction,
+    lengthRestrictionLine,
+  } = useContext(AppContext);
+
+  useEffect(() => {
+    if (lengthRestrictionLine && lengthInputRef.current) {
+      lengthInputRef.current.value = lengthRestrictionLine.element
+        .length()
+        .toString();
+    } else if (lengthRestrictionLine === undefined && lengthInputRef.current) {
+      lengthInputRef.current.value = '';
+    }
+  }, [lengthRestrictionLine]);
 
   return (
     <div className='menu'>
@@ -42,6 +58,20 @@ function Menu() {
           <ModeButton text='Podział krawędzi' mode={EditorMode.Split} />
           <h5>Nowe ograniczenie</h5>
           <ModeButton text='Długość' mode={EditorMode.SetLength} />
+          <AnimateHeight
+            height={editorMode === EditorMode.SetLength ? 'auto' : 0}
+            duration={300}
+            easing='ease-in-out'
+          >
+            <div className='menu-caption'>
+              Wybierz krawędź, następnie wprowadź długość i kliknij OK.
+            </div>
+            <div className='horizontal'>
+              <input placeholder='100' ref={lengthInputRef} />
+              <button onClick={() => addLengthRestriction()}>OK</button>
+            </div>
+          </AnimateHeight>
+
           <ModeButton text='Prostopadłość' mode={EditorMode.SetPerpendicular} />
         </div>
       </div>

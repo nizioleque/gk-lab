@@ -14,6 +14,8 @@ export interface DrawState {
 
   isShiftPressed?: boolean;
   isDraggingPolygon?: boolean;
+
+  restrictionFirstLine?: PolygonWith<Line>;
 }
 
 export enum EditorMode {

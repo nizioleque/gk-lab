@@ -2,7 +2,7 @@ import Line from '../class/Line';
 import Point from '../class/Point';
 import Polygon from '../class/Polygon';
 import { RestrictionData } from '../class/Restriction';
-import { DrawState, EditorMode } from '../types';
+import { DrawState, EditorMode, PolygonWith } from '../types';
 import { canClosePolygon, findHoveredElement } from '../utils';
 
 export default function mouseMove(
@@ -11,7 +11,8 @@ export default function mouseMove(
   drawState: DrawState,
   polygons: Polygon[],
   restrictionData: RestrictionData,
-  setErrorText: (text: string) => void
+  setErrorText: (text: string) => void,
+  lengthRestrictionLine: PolygonWith<Line> | undefined
 ) {
   switch (editorMode) {
     case EditorMode.Draw:
@@ -102,9 +103,17 @@ export default function mouseMove(
     highlight(true);
   }
 
-  function setLengthMode() {}
+  function setLengthMode() {
+    if (lengthRestrictionLine) {
+      lengthRestrictionLine.element.hover = true;
+    } else {
+      highlight(true);
+    }
+  }
 
-  function setPerpendicularMode() {}
+  function setPerpendicularMode() {
+    highlight(true);
+  }
 
   function highlight(edgeOnly: boolean = false) {
     const hoveredElement = findHoveredElement(polygons, mousePoint);

@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from 'react';
 import Line from '../class/Line';
 import Point from '../class/Point';
 import Polygon from '../class/Polygon';
@@ -19,7 +20,10 @@ export default function mouseDown(
   polygons: Polygon[],
   addPolygon: (polygon: Polygon) => void,
   removePolygon: (polygon: Polygon) => void,
-  setErrorText: (text: string) => void
+  setErrorText: (text: string) => void,
+  setLengthRestrictionLine: Dispatch<
+    SetStateAction<PolygonWith<Line> | undefined>
+  >
 ) {
   switch (editorMode) {
     case EditorMode.Draw:
@@ -61,12 +65,6 @@ export default function mouseDown(
         drawState.drawingLine!.setEnd(drawState.polygonStart);
         drawState.currentPolygon!.lines.push(drawState.drawingLine!);
         addPolygon(drawState.currentPolygon!);
-
-        // Reset state
-        drawState.currentPolygon = undefined;
-        drawState.polygonStart = undefined;
-        drawState.drawingLine = undefined;
-        drawState.drawingStart = undefined;
       } else {
         // Continue current polygon
         if (!drawState.currentPolygon) {
@@ -147,7 +145,12 @@ export default function mouseDown(
     hoveredElement.polygon.lines.splice(hoveredLineIndex + 1, 0, newLine);
   }
 
-  function setLengthMode() {}
+  function setLengthMode() {
+    const hoveredElement = findHoveredElement(polygons, mousePoint, true);
+    if (!hoveredElement) return;
+
+    setLengthRestrictionLine(hoveredElement as PolygonWith<Line>);
+  }
 
   function setPerpendicularMode() {}
 }

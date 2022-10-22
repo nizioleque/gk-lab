@@ -22,12 +22,26 @@ export default function useHandlers({
   draw,
   getMousePosition,
 }: HandlersProps) {
-  const { editorMode, addPolygon, removePolygon, restrictionData } =
-    useContext(AppContext);
+  const {
+    editorMode,
+    addPolygon,
+    removePolygon,
+    restrictionData,
+    lengthRestrictionLine,
+    setLengthRestrictionLine,
+  } = useContext(AppContext);
 
   const handleMouseMove = (event: MouseEvent) => {
     const mousePoint = getMousePosition(event);
-    mouseMove(editorMode, mousePoint, drawState, polygons, restrictionData, setErrorText);
+    mouseMove(
+      editorMode,
+      mousePoint,
+      drawState,
+      polygons,
+      restrictionData,
+      setErrorText,
+      lengthRestrictionLine
+    );
     draw();
   };
 
@@ -40,7 +54,8 @@ export default function useHandlers({
       polygons,
       addPolygon,
       removePolygon,
-      setErrorText
+      setErrorText,
+      setLengthRestrictionLine
     );
     draw();
   };

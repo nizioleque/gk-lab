@@ -44,10 +44,6 @@ const scene1Data = () => {
   const polygons = [polygon1, polygon2];
 
   const restrictionData = new RestrictionData();
-  // restrictionData.add(RestrictionType.Length, {
-  //   polygon: polygon1,
-  //   element: line2,
-  // });
   restrictionData.add(
     new LengthRestriction(
       {
@@ -57,7 +53,6 @@ const scene1Data = () => {
       200
     )
   );
-
   restrictionData.add(
     new LengthRestriction(
       {
@@ -67,12 +62,6 @@ const scene1Data = () => {
       200
     )
   );
-
-  // restrictionData.add(RestrictionType.Length, {
-  //   polygon: polygon2,
-  //   element: line8,
-  // });
-
   restrictionData.add(
     new PerpendicularRestriction(
       {
@@ -86,18 +75,6 @@ const scene1Data = () => {
     )
   );
 
-  // restrictionData.add(
-  //   RestrictionType.Perpendicular,
-  //   {
-  //     polygon: polygon1,
-  //     element: line2,
-  //   },
-  //   {
-  //     polygon: polygon2,
-  //     element: line7,
-  //   }
-  // );
-
   return { polygons, restrictionData };
 };
 
@@ -106,6 +83,15 @@ const scene1: SceneGenerator = {
   data: scene1Data,
 };
 
-const scenes: SceneGenerator[] = [scene1];
+const scene2Data = () => {
+  return { polygons: [], restrictionData: new RestrictionData() };
+};
+
+const scene2: SceneGenerator = {
+  name: 'Pusta',
+  data: scene2Data,
+};
+
+const scenes: SceneGenerator[] = [scene2, scene1];
 
 export default scenes;

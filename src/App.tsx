@@ -8,6 +8,7 @@ import usePolygons from './hooks/usePolygons';
 import { RestrictionData } from './class/Restriction';
 import { SceneGenerator } from './scenes';
 import useHoveredRestriction from './hooks/useHoveredRestriction';
+import useAddLengthRestriction from './hooks/useAddLengthRestriction';
 
 function App() {
   const canvasContainerRef = useRef<HTMLDivElement>(null);
@@ -29,10 +30,18 @@ function App() {
 
   const { hoveredRestriction, setHoveredRestriction } = useHoveredRestriction();
 
+  const {
+    lengthInputRef,
+    lengthRestrictionLine,
+    setLengthRestrictionLine,
+    addLengthRestriction,
+  } = useAddLengthRestriction(restrictionData);
+
   const applyScene = (scene: SceneGenerator) => {
     const newSceneData = scene.data();
     setPolygons(newSceneData.polygons);
     setRestrictionData(newSceneData.restrictionData);
+    // TODO: apply all...
   };
 
   useEffect(() => {
@@ -56,6 +65,10 @@ function App() {
         restrictionData,
         hoveredRestriction,
         setHoveredRestriction,
+        lengthInputRef,
+        lengthRestrictionLine,
+        setLengthRestrictionLine,
+        addLengthRestriction,
       }}
     >
       <div className='App'>

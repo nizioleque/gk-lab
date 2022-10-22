@@ -10,7 +10,7 @@ function SceneButton({ scene }: SceneButtonProps) {
   const { applyScene } = useContext(AppContext);
 
   return (
-    <div className='menu-button vertical' onClick={() => applyScene(scene)}>
+    <div className='menu-button horizontal' onClick={() => applyScene(scene)}>
       <div>{scene.name}</div>
       <button className='apply-button'>Otwórz</button>
     </div>

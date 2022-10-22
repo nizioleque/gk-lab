@@ -43,10 +43,11 @@
   font-weight: 700;
 }
 
-.menu-button.vertical {
+.horizontal {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 5px;
 }
 
 .apply-button {
@@ -96,4 +97,11 @@ h5 {
   position: absolute;
   color: rgb(0, 0, 0, 0.8);
   border-color: rgb(0, 0, 0, 0.8);
+}
+
+input {
+  flex: 1;
+  padding: 5px 10px;
+  border: 1px rgba(0, 0, 0, 0.3) solid;
+  border-radius: 10px;
 }

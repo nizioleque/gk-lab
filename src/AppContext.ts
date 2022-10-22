@@ -1,8 +1,9 @@
-import { createContext, Dispatch, SetStateAction } from 'react';
+import { createContext, Dispatch, RefObject, SetStateAction } from 'react';
+import Line from './class/Line';
 import Polygon from './class/Polygon';
 import { Restriction, RestrictionData } from './class/Restriction';
 import { SceneGenerator } from './scenes';
-import { EditorMode } from './types';
+import { EditorMode, PolygonWith } from './types';
 
 interface AppContext {
   editorMode: EditorMode;
@@ -14,6 +15,12 @@ interface AppContext {
   restrictionData: RestrictionData;
   hoveredRestriction: Restriction | undefined;
   setHoveredRestriction: (restriction: Restriction | undefined) => void;
+  lengthInputRef: RefObject<HTMLInputElement>;
+  lengthRestrictionLine: PolygonWith<Line> | undefined;
+  setLengthRestrictionLine: Dispatch<
+    SetStateAction<PolygonWith<Line> | undefined>
+  >;
+  addLengthRestriction: () => void;
 }
 
 const appContextDefaultValue: AppContext = {
@@ -26,6 +33,10 @@ const appContextDefaultValue: AppContext = {
   restrictionData: new RestrictionData(),
   hoveredRestriction: undefined,
   setHoveredRestriction: () => {},
+  lengthInputRef: { current: null },
+  lengthRestrictionLine: undefined,
+  setLengthRestrictionLine: () => {},
+  addLengthRestriction: () => {},
 };
 
 export const AppContext = createContext<AppContext>(appContextDefaultValue);

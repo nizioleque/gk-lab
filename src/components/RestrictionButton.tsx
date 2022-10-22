@@ -11,7 +11,7 @@ function RestrictionButton({ restriction }: RestrictionButtonProps) {
 
   return (
     <div
-      className='menu-button vertical'
+      className='menu-button horizontal'
       onMouseEnter={() => setHoveredRestriction(restriction)}
       onMouseLeave={() => setHoveredRestriction(undefined)}
     >
