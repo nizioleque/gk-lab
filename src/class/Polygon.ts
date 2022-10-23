@@ -55,28 +55,70 @@ export default class Polygon {
     }
 
     // first apply restrictions to the current polygon
-    // starting from startLines
-    const otherPolygons = polygons.filter((p) => p !== startPolygon);
+    // ending at a line without restriction (if exists)
+    // const otherPolygons = polygons.filter((p) => p !== startPolygon);
 
-    if (startPolygon && startLines && startLines.length > 0) {
-      const startLineIndex = startPolygon.lines.findIndex(
-        (line) => line === startLines[0]
+    // if (startPolygon && startLines && startLines.length > 0) {
+    //   const startLineIndex = startPolygon.lines.findIndex(
+    //     (line) => line === startLines[0]
+    //   );
+    //   for (let i = 0; i < startPolygon.lines.length; i++) {
+    //     const line =
+    //       startPolygon.lines[(startLineIndex + i) % startPolygon.lines.length];
+    //     const ret = line.applyRestrictions();
+    //     if (ret) error = true;
+    //   }
+    // }
+
+    // // apply restrictions to other polygons
+    // for (const polygon of otherPolygons) {
+    //   for (const line of polygon.lines) {
+    //     const ret = line.applyRestrictions();
+    //     if (ret) error = true;
+    //   }
+    // }
+
+    for (const polygon of polygons) {
+      let lineWithoutRestrictions = polygon.lines.find(
+        (line) => line.restrictions.length === 0
       );
-      for (let i = 0; i < startPolygon.lines.length; i++) {
-        const line =
-          startPolygon.lines[(startLineIndex + i) % startPolygon.lines.length];
-        const ret = line.applyRestrictions();
+
+      if (!lineWithoutRestrictions)
+        lineWithoutRestrictions = polygon.lines.find(
+          (line) =>
+            line.restrictions.filter(
+              (r) => r instanceof PerpendicularRestriction
+            ).length === 0
+        );
+
+      let startIndex = 0;
+      if (lineWithoutRestrictions)
+        startIndex =
+          (polygon.lines.indexOf(lineWithoutRestrictions) + 1) %
+          polygon.lines.length;
+
+      for (let i = 0; i < polygon.lines.length; i++) {
+        const ret =
+          polygon.lines[
+            (startIndex + i) % polygon.lines.length
+          ].applyRestrictions();
         if (ret) error = true;
       }
     }
 
-    // apply restrictions to other polygons
-    for (const polygon of otherPolygons) {
-      for (const line of polygon.lines) {
-        const ret = line.applyRestrictions();
-        if (ret) error = true;
-      }
-    }
+    // // now draw in the other direction
+    // // reset calculated a's
+    // for (const r of restrictionData.restrictions.filter(
+    //   (r) => r instanceof PerpendicularRestriction
+    // ) as PerpendicularRestriction[]) {
+    //   r.a = undefined;
+    // }
+    // for (let i = polygons.length - 1; i >= 0; i--) {
+    //   for (const line of polygons[i].lines) {
+    //     const ret = line.applyRestrictions();
+    //     if (ret) error = true;
+    //   }
+    // }
 
     return error;
   }

@@ -136,9 +136,9 @@ const scene4Data = () => {
   restrictionData.add(
     new LengthRestriction({ polygon: polygon1, element: line2 }, 200)
   );
-  restrictionData.add(
-    new LengthRestriction({ polygon: polygon1, element: line3 }, 200)
-  );
+  // restrictionData.add(
+  //   new LengthRestriction({ polygon: polygon1, element: line3 }, 200)
+  // );
   restrictionData.add(
     new LengthRestriction({ polygon: polygon1, element: line4 }, 200)
   );
@@ -160,12 +160,12 @@ const scene4Data = () => {
       { polygon: polygon1, element: line4 }
     )
   );
-  restrictionData.add(
-    new PerpendicularRestriction(
-      { polygon: polygon1, element: line4 },
-      { polygon: polygon1, element: line1 }
-    )
-  );
+  // restrictionData.add(
+  //   new PerpendicularRestriction(
+  //     { polygon: polygon1, element: line4 },
+  //     { polygon: polygon1, element: line1 }
+  //   )
+  // );
 
   return { polygons: [polygon1], restrictionData };
 };
@@ -254,7 +254,7 @@ const scene5Data = () => {
 };
 
 const scene5: SceneGenerator = {
-  name: 'Tańczące trójkąty 🕺',
+  name: 'Tańczące trójkąty',
   data: scene5Data,
 };
 

@@ -133,6 +133,10 @@ function Menu() {
       </div>
       <div className='menu-section'>
         <h3>Sceny</h3>
+        <div className='menu-caption center'>
+          Zalecane jest otworzenie okna przeglądarki na pełnym ekranie.
+        </div>
+
         <div className='buttons'>
           {scenes.map((scene) => (
             <SceneButton key={scene.name} scene={scene} />
