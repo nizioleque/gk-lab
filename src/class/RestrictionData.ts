@@ -18,8 +18,6 @@ export default class RestrictionData {
     this.restrictions.push(restriction);
     restriction.members[0].element.restrictions.push(restriction);
     restriction.members[1]?.element.restrictions.push(restriction);
-    // restriction.apply(new Point(0, 0), 0, []);
-    // TODO apply after adding!
     return false;
   }
 

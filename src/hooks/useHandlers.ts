@@ -1,5 +1,4 @@
 import Point from '../class/Point';
-import Polygon from '../class/Polygon';
 import mouseDown from '../handlers/mouseDown';
 import mouseMove from '../handlers/mouseMove';
 import mouseUp from '../handlers/mouseUp';
@@ -9,16 +8,12 @@ import { AppContext } from '../AppContext';
 
 interface HandlersProps {
   drawState: DrawState;
-  polygons: Polygon[];
-  setErrorText: (text: string) => void;
   draw: () => void;
   getMousePosition: (event: MouseEvent) => Point;
 }
 
 export default function useHandlers({
   drawState,
-  polygons,
-  setErrorText,
   draw,
   getMousePosition,
 }: HandlersProps) {
@@ -30,6 +25,8 @@ export default function useHandlers({
     lengthRestrictionLine,
     setLengthRestrictionLine,
     forceRerender,
+    polygons,
+    setErrorText,
   } = useContext(AppContext);
 
   const handleMouseMove = (event: MouseEvent) => {

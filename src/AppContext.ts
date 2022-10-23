@@ -25,6 +25,7 @@ interface AppContext {
   forceRerender: () => void;
   canvasRef: RefObject<HTMLCanvasElement>;
   canvasSize: { width: number; height: number };
+  setErrorText: (text: string) => void;
 }
 
 const appContextDefaultValue: AppContext = {
@@ -44,6 +45,7 @@ const appContextDefaultValue: AppContext = {
   forceRerender: () => {},
   canvasRef: { current: null },
   canvasSize: { width: 0, height: 0 },
+  setErrorText: () => {},
 };
 
 export const AppContext = createContext<AppContext>(appContextDefaultValue);

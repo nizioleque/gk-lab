@@ -170,14 +170,15 @@ export default function mouseDown(
       drawState.restrictionFirstLine = hoveredElement as PolygonWith<Line>;
     } else {
       // Second line
-      // TODO: handle error
-      restrictionData.add(
+      const error = restrictionData.add(
         new PerpendicularRestriction(
           drawState.restrictionFirstLine,
           hoveredElement as PolygonWith<Line>
         )
       );
       drawState.restrictionFirstLine = undefined;
+      if (error) setErrorText('Ta linia posiada już ograniczenie długości!');
+      else Polygon.applyRestrictions(polygons, restrictionData, []);
       forceRerender();
     }
   }

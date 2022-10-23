@@ -1,7 +1,6 @@
 import { useEffect, MouseEvent, useContext } from 'react';
 import { AppContext } from '../AppContext';
 import Point from '../class/Point';
-import useError from '../hooks/useError';
 import useHandlers from '../hooks/useHandlers';
 import useShiftPressed from '../hooks/useShiftPressed';
 import { DrawState } from '../types';
@@ -22,7 +21,6 @@ function Canvas() {
   const drawState: DrawState = {};
   useShiftPressed(drawState);
 
-  const { showError, errorText, setErrorText } = useError();
 
   const draw = () => _draw(ctx());
   const _draw = (ctx: CanvasRenderingContext2D) => {
@@ -38,28 +36,20 @@ function Canvas() {
 
   const { handleMouseDown, handleMouseMove, handleMouseUp } = useHandlers({
     drawState,
-    polygons,
-    setErrorText,
     draw,
     getMousePosition,
   });
 
   return (
-    <>
-      <canvas
-        ref={canvasRef}
-        className='canvas'
-        onMouseMove={handleMouseMove}
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
-        width={size.width}
-        height={size.height}
-      />
-      <div className={`alert ${showError ? 'show' : ''}`}>
-        <div className='alert-icon'>⚠️</div>
-        <div>{errorText}</div>
-      </div>
-    </>
+    <canvas
+      ref={canvasRef}
+      className='canvas'
+      onMouseMove={handleMouseMove}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+      width={size.width}
+      height={size.height}
+    />
   );
 }
 

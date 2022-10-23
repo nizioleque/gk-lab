@@ -10,6 +10,8 @@ import useHoveredRestriction from './hooks/useHoveredRestriction';
 import useAddLengthRestriction from './hooks/useAddLengthRestriction';
 import useForceRerender from './hooks/useForceRerender';
 import RestrictionData from './class/RestrictionData';
+import Polygon from './class/Polygon';
+import useError from './hooks/useError';
 
 function App() {
   const canvasContainerRef = useRef<HTMLDivElement>(null);
@@ -35,21 +37,24 @@ function App() {
 
   const { hoveredRestriction, setHoveredRestriction } = useHoveredRestriction();
 
+  const { showError, errorText, setErrorText } = useError();
+
   const {
     lengthInputRef,
     lengthRestrictionLine,
     setLengthRestrictionLine,
     addLengthRestriction,
-  } = useAddLengthRestriction(restrictionData);
+  } = useAddLengthRestriction(restrictionData, setErrorText, polygons);
 
   const applyScene = (scene: SceneGenerator) => {
     const newSceneData = scene.data();
     setPolygons(newSceneData.polygons);
     setRestrictionData(newSceneData.restrictionData);
-    // newSceneData.restrictionData.restrictions.forEach((r) =>
-    //   r.apply(new Point(0, 0), 0, [])
-    // );
-    // TODO: apply all...
+    Polygon.applyRestrictions(
+      newSceneData.polygons,
+      newSceneData.restrictionData,
+      []
+    );
   };
 
   useEffect(() => {
@@ -80,6 +85,7 @@ function App() {
         forceRerender,
         canvasRef,
         canvasSize,
+        setErrorText
       }}
     >
       <div className='App'>
@@ -87,6 +93,10 @@ function App() {
         <div className='canvas-container' ref={canvasContainerRef}>
           <Canvas />
         </div>
+      </div>
+      <div className={`alert ${showError ? 'show' : ''}`}>
+        <div className='alert-icon'>⚠️</div>
+        <div>{errorText}</div>
       </div>
     </AppContext.Provider>
   );
