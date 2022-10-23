@@ -11,7 +11,7 @@ export default class RestrictionData {
         (r) => r instanceof LengthRestriction
       )
     ) {
-      // this element already contains a restriction, error
+      // this element already contains a length restriction, error
       return true;
     }
 
@@ -36,65 +36,4 @@ export default class RestrictionData {
     }
     this.restrictions = this.restrictions.filter((r) => r !== restriction);
   }
-
-  // // return : 'success', true is OK
-  // applyAll(
-  //   mousePoint: Point,
-  //   sourceLines: Line[],
-  //   sourcePoint?: Point
-  // ): boolean {
-  //   let iters = 0;
-
-  //   let direction = 1;
-  //   if (
-  //     sourceLines[1]?.restrictions.find((r) => r instanceof LengthRestriction)
-  //   )
-  //     direction = 0;
-
-  //   while (true) {
-  //     let changed = false;
-
-  //     for (const restriction of this.restrictions) {
-  //       const result = restriction.apply(
-  //         mousePoint,
-  //         direction as 0 | 1,
-  //         sourceLines,
-  //         sourcePoint
-  //       );
-  //       if (result) changed = true;
-  //     }
-
-  //     if (!changed) {
-  //       console.log(`no change after ${iters} iterations -- success`);
-  //       return true;
-  //     }
-
-  //     if (iters++ > 10) {
-  //       console.warn('trying other direction');
-  //       while (true) {
-  //         changed = false;
-
-  //         for (const restriction of this.restrictions) {
-  //           const result = restriction.apply(
-  //             mousePoint,
-  //             direction === 0 ? 1 : 0,
-  //             sourceLines,
-  //             sourcePoint
-  //           );
-  //           if (result) changed = true;
-  //         }
-
-  //         if (!changed) {
-  //           console.log(`no change after ${iters} iterations -- success`);
-  //           return true;
-  //         }
-
-  //         if (iters++ > 20) {
-  //           console.error('exceeded 20 iterations');
-  //           return false;
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
 }

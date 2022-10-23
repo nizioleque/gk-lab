@@ -69,12 +69,6 @@ export default function mouseMove(
       drawState.draggedLine.element.hover = true;
       drawState.dragStart = mousePoint;
 
-      // adjustOtherPolygons(drawState.draggedLine.polygon);
-      // const success = restrictionData.applyAll(
-      //   mousePoint,
-      //   [drawState.draggedLine.element],
-      //   undefined
-      // );
       const error = Polygon.applyRestrictions(polygons, restrictionData, [
         drawState.draggedLine.element,
       ]);
@@ -102,24 +96,6 @@ export default function mouseMove(
         setErrorText(
           'Znaleziono sprzeczne ograniczenia - spróbuj usunąć niektóre ograniczenia'
         );
-
-      // const success = restrictionData.applyAll(
-      //   mousePoint,
-      //   [
-      //     drawState.draggedPoint.polygon.lines.find(
-      //       (line) => line.points[0] === drawState.draggedPoint?.element
-      //     )!,
-      //     drawState.draggedPoint.polygon.lines.find(
-      //       (line) => line.points[1] === drawState.draggedPoint?.element
-      //     )!,
-      //   ],
-      //   drawState.draggedPoint.element
-      // );
-
-      // if (!success)
-      //   setErrorText(
-      //     'Nie udało się zaaplikować ograniczeń - ograniczenia mogą być niemożliwe do zrealizowania'
-      //   );
     } else {
       highlight();
     }

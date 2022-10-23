@@ -15,6 +15,7 @@ export default function useAddLengthRestriction(
     if (!lengthInputRef.current) return;
     if (!lengthRestrictionLine) return;
     const value = parseFloat(lengthInputRef.current.value);
+    // TODO: handle error
     restrictionData.add(new LengthRestriction(lengthRestrictionLine, value));
     setLengthRestrictionLine(undefined);
   };
