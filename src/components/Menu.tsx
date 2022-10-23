@@ -33,6 +33,13 @@ function Menu() {
 
   return (
     <div className='menu'>
+      <header>
+        <h1>Polygon Paint</h1>
+        <div className='name'>Norbert Niziołek</div>
+        <a href='https://github.com/nizioleque/gk-lab' target='_blank'>
+          Kod źródłowy i dokumentacja
+        </a>
+      </header>
       <div className='menu-section'>
         <h3>Narzędzia</h3>
         <div className='buttons'>
@@ -73,7 +80,7 @@ function Menu() {
             easing='ease-in-out'
           >
             <div className='menu-caption'>
-              Wybierz krawędź, następnie wprowadź długość i kliknij OK.
+              Wybierz krawędź, następnie wprowadź długość i kliknij OK
             </div>
             <div className='horizontal'>
               <input placeholder='100' ref={lengthInputRef} />
@@ -89,7 +96,7 @@ function Menu() {
           >
             <div className='menu-caption'>
               Kliknij na dwie krawędzie, aby utworzyć między nimi ograniczenie
-              prostopadłości.
+              prostopadłości
             </div>
           </AnimateHeight>
 
@@ -121,6 +128,10 @@ function Menu() {
       <div className='menu-section'>
         <h3>Ograniczenia</h3>
         <div className='buttons'>
+          <div className='menu-caption center'>
+            Najedź myszką na ograniczenie aby podświetlić krawędzie
+          </div>
+
           {restrictionData.restrictions.length === 0 && (
             <div className='menu-caption center'>
               Brak zdefiniowanych ograniczeń
@@ -133,11 +144,11 @@ function Menu() {
       </div>
       <div className='menu-section'>
         <h3>Sceny</h3>
-        <div className='menu-caption center'>
-          Zalecane jest otworzenie okna przeglądarki na pełnym ekranie.
-        </div>
-
         <div className='buttons'>
+          <div className='menu-caption center'>
+            Zalecane jest otworzenie okna przeglądarki na pełnym ekranie
+          </div>
+
           {scenes.map((scene) => (
             <SceneButton key={scene.name} scene={scene} />
           ))}

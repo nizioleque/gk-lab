@@ -117,10 +117,10 @@ const scene3: SceneGenerator = {
 };
 
 const scene4Data = () => {
-  const point1 = new Point(500, 500);
-  const point2 = new Point(501, 700);
-  const point3 = new Point(701, 700);
-  const point4 = new Point(700, 500);
+  const point1 = new Point(500, 300);
+  const point2 = new Point(501, 500);
+  const point3 = new Point(701, 500);
+  const point4 = new Point(700, 300);
 
   const line1 = new Line(point1, point2);
   const line2 = new Line(point2, point3);

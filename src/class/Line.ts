@@ -60,12 +60,12 @@ export default class Line {
     );
 
     if (hasLengthRestriction && hasPerpendicularRestriction) {
-      this.drawMarker(ctx, RestrictionType.Length, -10, 0, -16, 5);
-      this.drawMarker(ctx, RestrictionType.Perpendicular, 10, 0, 4, 5);
+      this.drawMarker(ctx, RestrictionType.Length, -10, 0, -15, 5);
+      this.drawMarker(ctx, RestrictionType.Perpendicular, 10, 0, 5, 5);
     } else if (hasLengthRestriction) {
-      this.drawMarker(ctx, RestrictionType.Length, 0, 0, -6, 5);
+      this.drawMarker(ctx, RestrictionType.Length, 0, 0, -5, 5);
     } else if (hasPerpendicularRestriction) {
-      this.drawMarker(ctx, RestrictionType.Perpendicular, 0, 0, -6, 5);
+      this.drawMarker(ctx, RestrictionType.Perpendicular, 0, 0, -5, 5);
     }
   }
 
@@ -78,8 +78,8 @@ export default class Line {
     textYOffset: number
   ) {
     const middlePoint = middleOfLine(this);
-    ctx.strokeStyle = type === RestrictionType.Length ? 'red' : 'lime';
-    ctx.fillStyle = type === RestrictionType.Length ? 'red' : 'lime';
+    // ctx.strokeStyle = type === RestrictionType.Length ? 'red' : 'lime';
+    ctx.fillStyle = type === RestrictionType.Length ? '#e57171' : '#61cc61';
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.arc(
@@ -89,8 +89,9 @@ export default class Line {
       0,
       2 * Math.PI
     );
-    ctx.stroke();
-    ctx.font = '16px Arial Black';
+    ctx.fill();
+    ctx.fillStyle = 'white';
+    ctx.font = '14px Arial Black';
     ctx.fillText(
       type === RestrictionType.Length ? 'D' : 'P',
       middlePoint.x + textXOffset,

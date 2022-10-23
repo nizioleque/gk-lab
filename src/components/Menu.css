@@ -1,20 +1,30 @@
 .menu {
-  background-color: rgb(156, 240, 240);
-  border-radius: 20px;
+  background-color: hsl(180, 70%, 78%);
+  border-radius: 10px;
   margin: 10px;
   padding: 10px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  padding-right: 0;
+  padding-bottom: 20px;
+  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
+    0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
 
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 16px;
 
-  overflow: auto;
+  overflow-y: scroll;
   position: relative;
 }
 
+.name {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
 .menu-section {
-  background-color: rgb(255, 255, 255, 0.9);
+  background-color: rgb(255, 255, 255, 1);
+  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
+    0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
   padding: 10px;
   border-radius: 10px;
 }
@@ -22,7 +32,7 @@
 .buttons {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
 }
 
 .menu-button {
@@ -61,11 +71,16 @@
   font-variant: small-caps;
   text-transform: lowercase;
   font-size: 1rem;
+  margin-top: -3px;
+}
+
+.apply-button:hover {
+  color: rgb(0, 0, 0);
 }
 
 .menu-caption {
   font-size: 0.9rem;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
 }
 
 .rah-static--height-zero {
@@ -111,4 +126,32 @@ input {
 
 .center {
   text-align: center;
+}
+
+header {
+  text-align: center;
+}
+
+h1 {
+  margin: 15px 0;
+  font-weight: 900;
+}
+
+.menu::-webkit-scrollbar {
+  width: 18px;
+}
+
+.menu::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.menu::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 20px;
+  border: 6px solid transparent;
+  background-clip: content-box;
+}
+
+.menu::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.8);
 }
