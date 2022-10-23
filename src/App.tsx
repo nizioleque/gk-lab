@@ -10,7 +10,6 @@ import useHoveredRestriction from './hooks/useHoveredRestriction';
 import useAddLengthRestriction from './hooks/useAddLengthRestriction';
 import useForceRerender from './hooks/useForceRerender';
 import RestrictionData from './class/RestrictionData';
-import Point from './class/Point';
 
 function App() {
   const canvasContainerRef = useRef<HTMLDivElement>(null);
@@ -47,9 +46,9 @@ function App() {
     const newSceneData = scene.data();
     setPolygons(newSceneData.polygons);
     setRestrictionData(newSceneData.restrictionData);
-    newSceneData.restrictionData.restrictions.forEach((r) =>
-      r.apply(new Point(0, 0), 0, [])
-    );
+    // newSceneData.restrictionData.restrictions.forEach((r) =>
+    //   r.apply(new Point(0, 0), 0, [])
+    // );
     // TODO: apply all...
   };
 

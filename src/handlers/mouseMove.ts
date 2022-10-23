@@ -70,14 +70,18 @@ export default function mouseMove(
       drawState.dragStart = mousePoint;
 
       // adjustOtherPolygons(drawState.draggedLine.polygon);
-      const success = restrictionData.applyAll(
-        mousePoint,
-        [drawState.draggedLine.element],
-        undefined
-      );
-      if (!success)
+      // const success = restrictionData.applyAll(
+      //   mousePoint,
+      //   [drawState.draggedLine.element],
+      //   undefined
+      // );
+      const error = Polygon.applyRestrictions(polygons, restrictionData, [
+        drawState.draggedLine.element,
+      ]);
+
+      if (error)
         setErrorText(
-          'Nie udało się zaaplikować ograniczeń - ograniczenia mogą być niemożliwe do zrealizowania'
+          'Znaleziono sprzeczne ograniczenia - spróbuj usunąć niektóre ograniczenia'
         );
     } else if (drawState.draggedPoint) {
       // Drag one point
@@ -85,23 +89,37 @@ export default function mouseMove(
       drawState.draggedPoint.element.y = mousePoint.y;
       drawState.draggedPoint.element.hover = true;
 
-      const success = restrictionData.applyAll(
-        mousePoint,
-        [
-          drawState.draggedPoint.polygon.lines.find(
-            (line) => line.points[0] === drawState.draggedPoint?.element
-          )!,
-          drawState.draggedPoint.polygon.lines.find(
-            (line) => line.points[1] === drawState.draggedPoint?.element
-          )!,
-        ],
-        drawState.draggedPoint.element
-      );
+      const error = Polygon.applyRestrictions(polygons, restrictionData, [
+        drawState.draggedPoint.polygon.lines.find(
+          (line) => line.points[0] === drawState.draggedPoint?.element
+        )!,
+        drawState.draggedPoint.polygon.lines.find(
+          (line) => line.points[1] === drawState.draggedPoint?.element
+        )!,
+      ]);
 
-      if (!success)
+      if (error)
         setErrorText(
-          'Nie udało się zaaplikować ograniczeń - ograniczenia mogą być niemożliwe do zrealizowania'
+          'Znaleziono sprzeczne ograniczenia - spróbuj usunąć niektóre ograniczenia'
         );
+
+      // const success = restrictionData.applyAll(
+      //   mousePoint,
+      //   [
+      //     drawState.draggedPoint.polygon.lines.find(
+      //       (line) => line.points[0] === drawState.draggedPoint?.element
+      //     )!,
+      //     drawState.draggedPoint.polygon.lines.find(
+      //       (line) => line.points[1] === drawState.draggedPoint?.element
+      //     )!,
+      //   ],
+      //   drawState.draggedPoint.element
+      // );
+
+      // if (!success)
+      //   setErrorText(
+      //     'Nie udało się zaaplikować ograniczeń - ograniczenia mogą być niemożliwe do zrealizowania'
+      //   );
     } else {
       highlight();
     }

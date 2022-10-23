@@ -1,4 +1,6 @@
 import Line from './Line';
+import { PerpendicularRestriction } from './Restriction';
+import RestrictionData from './RestrictionData';
 
 export default class Polygon {
   lines: Line[];
@@ -19,5 +21,41 @@ export default class Polygon {
       line.hover = true;
       line.points[0].hover = true;
     }
+  }
+
+  // return: error
+  static applyRestrictions(
+    polygons: Polygon[],
+    restrictionData: RestrictionData,
+    startLines: Line[]
+  ): boolean {
+    let error = false;
+
+    // reset calculated a's
+    for (const r of restrictionData.restrictions.filter(
+      (r) => r instanceof PerpendicularRestriction
+    ) as PerpendicularRestriction[]) {
+      r.a = undefined;
+    }
+
+    // calculate a's for start lines
+    for (const line of startLines) {
+      const a = line.calculateA();
+      for (const r of line.restrictions.filter(
+        (r) => r instanceof PerpendicularRestriction
+      ) as PerpendicularRestriction[]) {
+        r.setA(line, a);
+      }
+    }
+
+    // apply restrictions
+    for (const polygon of polygons) {
+      for (const line of polygon.lines) {
+        const ret = line.applyRestrictions();
+        if (ret) error = true;
+      }
+    }
+
+    return error;
   }
 }

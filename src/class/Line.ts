@@ -14,6 +14,7 @@ export default class Line {
   points: [Point, Point];
   hover: boolean = false;
   restrictions: Restriction[] = [];
+  checked: boolean = false;
 
   constructor(point1: Point, point2: Point) {
     this.points = [point1, point2];
@@ -32,6 +33,10 @@ export default class Line {
       (this.points[0].y - this.points[1].y) /
       (this.points[0].x - this.points[1].x)
     );
+  }
+
+  calculateB(a: number): number {
+    return this.points[0].y - this.points[0].x * a;
   }
 
   draw(ctx: CanvasRenderingContext2D): void {
@@ -122,5 +127,97 @@ export default class Line {
 
   length(): number {
     return Math.sqrt(distSq(this.points[0], this.points[1]));
+  }
+
+  // return: error
+  applyRestrictions(): boolean {
+    console.log('apply restrictions - line');
+    // calculate current 'a'
+    const currentA = this.calculateA();
+    let error = false;
+
+    // filter per. rest. and length rest.
+    const perpendicularRestrictions = this.restrictions.filter(
+      (r) => r instanceof PerpendicularRestriction
+    ) as PerpendicularRestriction[];
+    const lengthRestriction = this.restrictions.find(
+      (r) => r instanceof LengthRestriction
+    ) as LengthRestriction;
+
+    console.log(lengthRestriction);
+
+    if (perpendicularRestrictions.length > 0) {
+      let applyA = currentA;
+
+      // check if 1st per.rest. has 'a'
+      if (perpendicularRestrictions[0].a) {
+        applyA = perpendicularRestrictions[0].getA(this);
+      }
+
+      // if not ->
+      else {
+        // loop through all restrictions recursively and set 'a'
+        // -> if 'a' is already set and incorrect, return error
+        for (const r of perpendicularRestrictions) {
+          const ret = r.setA(this, currentA);
+          if (ret) error = true;
+        }
+      }
+
+      // apply 'a' (from per.rest. or calculated)
+      if (Math.abs(currentA - applyA) > 0.01) {
+        this.applyA(applyA);
+      }
+    }
+
+    // apply length rest.
+    if (
+      lengthRestriction &&
+      Math.abs(lengthRestriction.length - this.length()) > 0.01
+    ) {
+      this.applyLength(lengthRestriction.length);
+    }
+
+    return error;
+  }
+
+  applyA(a: number) {
+    console.log('apply a', a);
+
+    const length = this.length();
+
+    // calculate a, b
+    const b = this.calculateB(a);
+
+    // calculate new Y of 2nd point
+    const newY = a * this.points[1].x + b;
+
+    // move 2nd point
+    this.points[1].y = newY;
+
+    // correct length
+    this.applyLength(length);
+  }
+
+  applyLength(length: number) {
+    console.log('applyLength', length);
+
+    // calculate a (proportion)
+    const ratio = length / this.length();
+
+    // multiply deltaX, deltaY by proportion
+    let x = this.points[1].x - this.points[0].x;
+    let y = this.points[1].y - this.points[0].y;
+
+    x *= ratio;
+    y *= ratio;
+
+    // add deltaX, deltaY to 1st point
+    x += this.points[0].x;
+    y += this.points[0].y;
+
+    // apply to 2nd point
+    this.points[1].x = x;
+    this.points[1].y = y;
   }
 }
