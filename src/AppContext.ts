@@ -24,7 +24,7 @@ interface AppContext {
   addLengthRestriction: () => void;
   forceRerender: () => void;
   canvasRef: RefObject<HTMLCanvasElement>;
-  canvasSize: { width: number; height: number };
+  canvasSize: { width: number; height: number; pixelRatio: number };
   setErrorText: (text: string) => void;
 }
 
@@ -44,7 +44,7 @@ const appContextDefaultValue: AppContext = {
   addLengthRestriction: () => {},
   forceRerender: () => {},
   canvasRef: { current: null },
-  canvasSize: { width: 0, height: 0 },
+  canvasSize: { width: 0, height: 0, pixelRatio: 1 },
   setErrorText: () => {},
 };
 

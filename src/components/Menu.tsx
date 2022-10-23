@@ -108,8 +108,8 @@ function Menu() {
             onClick={() => {
               const link = document.createElement('a');
               const canvas = document.createElement('canvas');
-              canvas.height = canvasSize.height;
-              canvas.width = canvasSize.width;
+              canvas.height = canvasSize.height * canvasSize.pixelRatio;
+              canvas.width = canvasSize.width * canvasSize.pixelRatio;
               bresenham(canvas, polygons);
               link.download = 'Norbert Niziołek - algorytm Bresenhama.png';
               link.href = canvas.toDataURL() ?? '';

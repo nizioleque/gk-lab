@@ -15,17 +15,24 @@ function Canvas() {
   const ctx = () => canvasRef.current?.getContext('2d')!;
   const getMousePosition = (event: MouseEvent): Point => {
     const rect = canvasRef.current?.getBoundingClientRect()!;
-    return new Point(event.clientX - rect.left, event.clientY - rect.top);
+    return new Point(
+      (event.clientX - rect.left) * size.pixelRatio,
+      (event.clientY - rect.top) * size.pixelRatio
+    );
   };
 
   const drawState: DrawState = {};
   useShiftPressed(drawState);
 
-
   const draw = () => _draw(ctx());
   const _draw = (ctx: CanvasRenderingContext2D) => {
     ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, size.width, size.height);
+    ctx.fillRect(
+      0,
+      0,
+      size.width * size.pixelRatio,
+      size.height * size.pixelRatio
+    );
     for (const polygon of polygons) polygon.draw(ctx);
     drawState.currentPolygon?.draw(ctx);
     drawState.drawingLine?.draw(ctx);
@@ -47,8 +54,12 @@ function Canvas() {
       onMouseMove={handleMouseMove}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
-      width={size.width}
-      height={size.height}
+      width={size.width * size.pixelRatio}
+      height={size.height * size.pixelRatio}
+      style={{
+        width: `${size.width}px`,
+        height: `${size.height}px`,
+      }}
     />
   );
 }

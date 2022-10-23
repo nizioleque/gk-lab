@@ -15,12 +15,18 @@ import useError from './hooks/useError';
 function App() {
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
+
+  const [canvasSize, setCanvasSize] = useState({
+    width: 0,
+    height: 0,
+    pixelRatio: 1,
+  });
   const updateCanvasSize = () => {
     if (!canvasContainerRef.current) return;
     setCanvasSize({
       width: canvasContainerRef.current.offsetWidth,
       height: canvasContainerRef.current.offsetHeight,
+      pixelRatio: window.devicePixelRatio || 1,
     });
   };
   const { forceRerender } = useForceRerender();
