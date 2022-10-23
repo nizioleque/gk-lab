@@ -14,7 +14,12 @@ export class Restriction {
     this.members = members;
   }
 
-  apply(mousePoint: Point, direction: 0 | 1, sourceLines: Line[]): boolean {
+  apply(
+    mousePoint: Point,
+    direction: 0 | 1,
+    sourceLines: Line[],
+    sourcePoint?: Point
+  ): boolean {
     console.error('Restriction class apply method called!');
     return false;
   }
@@ -29,7 +34,12 @@ export class LengthRestriction extends Restriction {
   }
 
   // return: 'changed' -- true is 'change was required'
-  apply(mousePoint: Point, direction: 0 | 1, sourceLines: Line[]): boolean {
+  apply(
+    mousePoint: Point,
+    direction: 0 | 1,
+    sourceLines: Line[],
+    sourcePoint?: Point
+  ): boolean {
     const actualLength = this.members[0].element.length();
     if (Math.abs(actualLength - this.length) < 0.01) {
       // console.log('length is correct');
@@ -45,19 +55,52 @@ export class LengthRestriction extends Restriction {
     const constantPoint = this.members[0].element.points[direction];
     const movingPoint = this.members[0].element.points[otherDirection];
 
-    const facingDown = movingPoint.y > constantPoint.y;
-    console.log('facingDown:', facingDown);
-
     const line = this.members[0].element;
-    console.log('start point not in line!', direction);
-    let { dX, dY } = aToXY(line.calculateAB().a, this.length);
-    console.log('a', line.calculateAB().a);
-    console.log('x,y', dX, dY);
-    const newPointX = constantPoint.x + dX;
-    const newPointY = constantPoint.y + Math.abs(dY) * (facingDown ? 1 : -1);
-    console.log('new point', newPointX, newPointY);
-    movingPoint.x = newPointX;
-    movingPoint.y = newPointY;
+
+    const isSourcePointInLine: boolean = sourcePoint
+      ? line.points[otherDirection] === sourcePoint
+      : false;
+
+    if (isSourcePointInLine) {
+      console.log('in line');
+      const deltaX = mousePoint.x - constantPoint.x;
+      const deltaY = mousePoint.y - constantPoint.y;
+      console.log(deltaX, deltaY);
+
+      const a = deltaY / deltaX;
+      const alpha = Math.atan(a);
+
+      const newX = this.length * Math.cos(alpha);
+      const newY = this.length * Math.sin(alpha);
+      const newPointX =
+        constantPoint.x + newX * (mousePoint.x < constantPoint.x ? -1 : 1);
+      const newPointY =
+        constantPoint.y + newY * (mousePoint.x < constantPoint.x ? -1 : 1);
+      movingPoint.x = newPointX;
+      movingPoint.y = newPointY;
+    } else {
+      console.log('NOT in line');
+      const { dX, dY } = aToXY(line.calculateA(), this.length);
+      const newPointX = constantPoint.x + dX;
+      const newPointY = constantPoint.y + dY;
+      movingPoint.x = newPointX;
+      movingPoint.y = newPointY;
+    }
+
+    // const facingDown = movingPoint.y > constantPoint.y;
+    // console.log('facingDown:', facingDown);
+
+    // const line = this.members[0].element;
+    // console.log('start point not in line!', direction);
+    // let { dX, dY } = aToXY(line.calculateAB().a, this.length);
+    // console.log('a', line.calculateAB().a);
+    // console.log('x,y', dX, dY);
+    // const newPointX = constantPoint.x + dX;
+    // const newPointY = constantPoint.y + dY;
+    // //+ Math.abs(dY) * (facingDown ? 1 : -1);
+    // console.log('new point', newPointX, newPointY);
+    // movingPoint.x = newPointX;
+    // movingPoint.y = newPointY;
 
     return true;
   }
@@ -68,7 +111,12 @@ export class PerpendicularRestriction extends Restriction {
     super([member1, member2]);
   }
 
-  apply(mousePoint: Point, direction: 0 | 1, sourceLines: Line[]): boolean {
+  apply(
+    mousePoint: Point,
+    direction: 0 | 1,
+    sourceLines: Line[],
+    sourcePoint?: Point
+  ): boolean {
     let startMember: 0 | 1 = 0;
     if (sourceLines.find((line) => line === this.members[1].element))
       startMember = 1;
@@ -77,8 +125,8 @@ export class PerpendicularRestriction extends Restriction {
 
     // console.log('startMember', startMember);
 
-    const a1 = this.members[startMember].element.calculateAB().a;
-    const a2Current = otherMember.element.calculateAB().a;
+    const a1 = this.members[startMember].element.calculateA();
+    const a2Current = otherMember.element.calculateA();
     const a2New = -1 / a1;
 
     if (Math.abs(a2Current - a2New) < 0.01) {

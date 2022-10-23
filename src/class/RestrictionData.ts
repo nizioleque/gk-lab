@@ -27,14 +27,18 @@ export default class RestrictionData {
   }
 
   // return : 'success', true is OK
-  applyAll(mousePoint: Point, sourceLines: Line[]): boolean {
+  applyAll(
+    mousePoint: Point,
+    sourceLines: Line[],
+    sourcePoint?: Point
+  ): boolean {
     let iters = 0;
 
-    let direction = 0;
+    let direction = 1;
     if (
       sourceLines[1]?.restrictions.find((r) => r instanceof LengthRestriction)
     )
-      direction = 1;
+      direction = 0;
 
     while (true) {
       let changed = false;
@@ -43,7 +47,8 @@ export default class RestrictionData {
         const result = restriction.apply(
           mousePoint,
           direction as 0 | 1,
-          sourceLines
+          sourceLines,
+          sourcePoint
         );
         if (result) changed = true;
       }
@@ -62,7 +67,8 @@ export default class RestrictionData {
             const result = restriction.apply(
               mousePoint,
               direction === 0 ? 1 : 0,
-              sourceLines
+              sourceLines,
+              sourcePoint
             );
             if (result) changed = true;
           }

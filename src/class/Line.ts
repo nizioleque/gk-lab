@@ -27,12 +27,11 @@ export default class Line {
     this.points[0] = start;
   }
 
-  calculateAB(): { a: number; b: number } {
-    const a =
+  calculateA(): number {
+    return (
       (this.points[0].y - this.points[1].y) /
-      (this.points[0].x - this.points[1].x);
-    const b = this.points[1].y - this.points[0].x * a;
-    return { a, b };
+      (this.points[0].x - this.points[1].x)
+    );
   }
 
   draw(ctx: CanvasRenderingContext2D): void {
