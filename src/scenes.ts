@@ -118,8 +118,8 @@ const scene3: SceneGenerator = {
 
 const scene4Data = () => {
   const point1 = new Point(500, 500);
-  const point2 = new Point(500, 700);
-  const point3 = new Point(700, 700);
+  const point2 = new Point(501, 700);
+  const point3 = new Point(701, 700);
   const point4 = new Point(700, 500);
 
   const line1 = new Line(point1, point2);
@@ -136,9 +136,9 @@ const scene4Data = () => {
   restrictionData.add(
     new LengthRestriction({ polygon: polygon1, element: line2 }, 200)
   );
-  // restrictionData.add(
-  //   new LengthRestriction({ polygon: polygon1, element: line3 }, 200)
-  // );
+  restrictionData.add(
+    new LengthRestriction({ polygon: polygon1, element: line3 }, 200)
+  );
   restrictionData.add(
     new LengthRestriction({ polygon: polygon1, element: line4 }, 200)
   );
@@ -160,12 +160,12 @@ const scene4Data = () => {
       { polygon: polygon1, element: line4 }
     )
   );
-  // restrictionData.add(
-  //   new PerpendicularRestriction(
-  //     { polygon: polygon1, element: line4 },
-  //     { polygon: polygon1, element: line1 }
-  //   )
-  // );
+  restrictionData.add(
+    new PerpendicularRestriction(
+      { polygon: polygon1, element: line4 },
+      { polygon: polygon1, element: line1 }
+    )
+  );
 
   return { polygons: [polygon1], restrictionData };
 };
