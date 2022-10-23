@@ -85,21 +85,8 @@ export default class Polygon {
       r.a = undefined;
     }
 
-    if (startPolygon && startLines && startLines.length > 0) {
-      const startLineIndex = startPolygon.lines.findIndex(
-        (line) => line === startLines[1]
-      );
-      for (let i = startPolygon.lines.length; i > 0; i--) {
-        const currentIndex = (startLineIndex + i) % startPolygon.lines.length;
-
-        const line = startPolygon.lines[currentIndex];
-        const ret = line.applyRestrictions();
-        if (ret) error = true;
-      }
-    }
-
-    for (let i = otherPolygons.length - 1; i >= 0; i--) {
-      for (const line of otherPolygons[i].lines) {
+    for (let i = polygons.length - 1; i >= 0; i--) {
+      for (const line of polygons[i].lines) {
         const ret = line.applyRestrictions();
         if (ret) error = true;
       }
