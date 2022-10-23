@@ -13,11 +13,11 @@ export interface SceneGenerator {
 }
 
 const scene1Data = () => {
-  const point1 = new Point(525, 200);
-  const point2 = new Point(360, 390);
-  const point3 = new Point(490, 685);
-  const point4 = new Point(845, 682);
-  const point5 = new Point(944, 383);
+  const point1 = new Point(611, 459);
+  const point2 = new Point(497, 581);
+  const point3 = new Point(615, 742);
+  const point4 = new Point(743, 707);
+  const point5 = new Point(804, 524);
 
   const line1 = new Line(point1, point2);
   const line2 = new Line(point2, point3);
@@ -27,11 +27,11 @@ const scene1Data = () => {
 
   const polygon1 = new Polygon([line1, line2, line3, line4, line5]);
 
-  const point6 = new Point(170, 80);
-  const point7 = new Point(80, 290);
-  const point8 = new Point(245, 160);
-  const point9 = new Point(55, 165);
-  const point10 = new Point(200, 290);
+  const point6 = new Point(342, 275);
+  const point7 = new Point(268, 483);
+  const point8 = new Point(440, 356);
+  const point9 = new Point(240, 354);
+  const point10 = new Point(394, 484);
 
   const line6 = new Line(point6, point7);
   const line7 = new Line(point7, point8);
@@ -79,7 +79,7 @@ const scene1Data = () => {
 };
 
 const scene1: SceneGenerator = {
-  name: 'Gwiazda i pięciokąt',
+  name: 'Gwiazda i pięciokąt (3 ograniczenia)',
   data: scene1Data,
 };
 
@@ -93,7 +93,7 @@ const scene2: SceneGenerator = {
 };
 
 const scene3Data = () => {
-  const point1 = new Point(450, 400);
+  const point1 = new Point(600, 400);
   const point2 = new Point(200, 700);
   const point3 = new Point(600, 600);
 
@@ -105,17 +105,159 @@ const scene3Data = () => {
 
   const restrictionData = new RestrictionData();
   restrictionData.add(
-    new LengthRestriction({ polygon: polygon1, element: line3 }, 150)
+    new LengthRestriction({ polygon: polygon1, element: line3 }, 200)
   );
 
   return { polygons: [polygon1], restrictionData };
 };
 
 const scene3: SceneGenerator = {
-  name: 'Trójkąt z ograniczeniem długości',
+  name: 'Trójkąt z jednym ograniczeniem długości',
   data: scene3Data,
 };
 
-const scenes: SceneGenerator[] = [scene2, scene1, scene3];
+const scene4Data = () => {
+  const point1 = new Point(500, 500);
+  const point2 = new Point(500, 700);
+  const point3 = new Point(700, 700);
+  const point4 = new Point(700, 500);
+
+  const line1 = new Line(point1, point2);
+  const line2 = new Line(point2, point3);
+  const line3 = new Line(point3, point4);
+  const line4 = new Line(point4, point1);
+
+  const polygon1 = new Polygon([line1, line2, line3, line4]);
+
+  const restrictionData = new RestrictionData();
+  restrictionData.add(
+    new LengthRestriction({ polygon: polygon1, element: line1 }, 200)
+  );
+  restrictionData.add(
+    new LengthRestriction({ polygon: polygon1, element: line2 }, 200)
+  );
+  restrictionData.add(
+    new LengthRestriction({ polygon: polygon1, element: line3 }, 200)
+  );
+  restrictionData.add(
+    new LengthRestriction({ polygon: polygon1, element: line4 }, 200)
+  );
+  restrictionData.add(
+    new PerpendicularRestriction(
+      { polygon: polygon1, element: line1 },
+      { polygon: polygon1, element: line2 }
+    )
+  );
+  restrictionData.add(
+    new PerpendicularRestriction(
+      { polygon: polygon1, element: line2 },
+      { polygon: polygon1, element: line3 }
+    )
+  );
+  restrictionData.add(
+    new PerpendicularRestriction(
+      { polygon: polygon1, element: line3 },
+      { polygon: polygon1, element: line4 }
+    )
+  );
+  restrictionData.add(
+    new PerpendicularRestriction(
+      { polygon: polygon1, element: line4 },
+      { polygon: polygon1, element: line1 }
+    )
+  );
+
+  return { polygons: [polygon1], restrictionData };
+};
+
+const scene4: SceneGenerator = {
+  name: 'Kwadrat ze wszystkimi ograniczeniami',
+  data: scene4Data,
+};
+
+const scene5Data = () => {
+  const restrictionData = new RestrictionData();
+
+  const point11 = new Point(385, 234);
+  const point12 = new Point(384, 358);
+  const point13 = new Point(529, 359);
+
+  const line11 = new Line(point11, point12);
+  const line12 = new Line(point12, point13);
+  const line13 = new Line(point13, point11);
+
+  const polygon1 = new Polygon([line11, line12, line13]);
+
+  const point21 = new Point(664, 216);
+  const point22 = new Point(807, 370);
+  const point23 = new Point(805, 217);
+
+  const line21 = new Line(point21, point22);
+  const line22 = new Line(point22, point23);
+  const line23 = new Line(point23, point21);
+
+  const polygon2 = new Polygon([line21, line22, line23]);
+
+  const point31 = new Point(805, 512);
+  const point32 = new Point(803, 655);
+  const point33 = new Point(677, 657);
+
+  const line31 = new Line(point31, point32);
+  const line32 = new Line(point32, point33);
+  const line33 = new Line(point33, point31);
+
+  const polygon3 = new Polygon([line31, line32, line33]);
+
+  const point41 = new Point(452, 652);
+  const point42 = new Point(528, 523);
+  const point43 = new Point(378, 521);
+
+  const line41 = new Line(point41, point42);
+  const line42 = new Line(point42, point43);
+  const line43 = new Line(point43, point41);
+
+  const polygon4 = new Polygon([line41, line42, line43]);
+
+  restrictionData.add(
+    new LengthRestriction({ polygon: polygon4, element: line41 }, 150)
+  );
+  restrictionData.add(
+    new LengthRestriction({ polygon: polygon4, element: line42 }, 150)
+  );
+  restrictionData.add(
+    new LengthRestriction({ polygon: polygon4, element: line43 }, 150)
+  );
+
+  restrictionData.add(
+    new PerpendicularRestriction(
+      { polygon: polygon1, element: line11 },
+      { polygon: polygon2, element: line23 }
+    )
+  );
+  restrictionData.add(
+    new PerpendicularRestriction(
+      { polygon: polygon2, element: line23 },
+      { polygon: polygon3, element: line31 }
+    )
+  );
+  restrictionData.add(
+    new PerpendicularRestriction(
+      { polygon: polygon3, element: line31 },
+      { polygon: polygon4, element: line42 }
+    )
+  );
+
+  return {
+    polygons: [polygon1, polygon2, polygon3, polygon4],
+    restrictionData,
+  };
+};
+
+const scene5: SceneGenerator = {
+  name: 'Tańczące trójkąty 🕺',
+  data: scene5Data,
+};
+
+const scenes: SceneGenerator[] = [scene2, scene1, scene3, scene4, scene5];
 
 export default scenes;
