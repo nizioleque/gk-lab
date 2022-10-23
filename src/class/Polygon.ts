@@ -27,7 +27,8 @@ export default class Polygon {
   static applyRestrictions(
     polygons: Polygon[],
     restrictionData: RestrictionData,
-    startLines: Line[]
+    startPolygon?: Polygon,
+    startLines?: Line[]
   ): boolean {
     let error = false;
 
@@ -39,17 +40,38 @@ export default class Polygon {
     }
 
     // calculate a's for start lines
-    for (const line of startLines) {
-      const a = line.calculateA();
-      for (const r of line.restrictions.filter(
+    for (const line of startLines ?? []) {
+      const restrictions = line.restrictions.filter(
         (r) => r instanceof PerpendicularRestriction
-      ) as PerpendicularRestriction[]) {
-        r.setA(line, a);
+      ) as PerpendicularRestriction[];
+      if (restrictions.length > 0) {
+        const a = line.calculateA();
+        for (const r of restrictions) {
+          const ret = r.setA(line, a);
+          if (ret) error = true;
+        }
+        break;
       }
     }
 
-    // apply restrictions
-    for (const polygon of polygons) {
+    // first apply restrictions to the current polygon
+    // starting from startLines
+    const otherPolygons = polygons.filter((p) => p !== startPolygon);
+
+    if (startPolygon && startLines && startLines.length > 0) {
+      const startLineIndex = startPolygon.lines.findIndex(
+        (line) => line === startLines[0]
+      );
+      for (let i = 0; i < startPolygon.lines.length; i++) {
+        const line =
+          startPolygon.lines[(startLineIndex + i) % startPolygon.lines.length];
+        const ret = line.applyRestrictions();
+        if (ret) error = true;
+      }
+    }
+
+    // apply restrictions to other polygons
+    for (const polygon of otherPolygons) {
       for (const line of polygon.lines) {
         const ret = line.applyRestrictions();
         if (ret) error = true;

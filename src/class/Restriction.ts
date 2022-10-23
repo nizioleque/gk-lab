@@ -49,7 +49,6 @@ export class PerpendicularRestriction extends Restriction {
     if (this.a) {
       if (Math.abs(this.a[fromIndex] - value) < 0.01) {
         // -> correctly - do nothing
-        console.log('a already set, but correct');
         return false;
       } else {
         // -> incorrectly - return error
@@ -65,12 +64,13 @@ export class PerpendicularRestriction extends Restriction {
     else if (fromIndex === 1) this.a = [otherA, value];
 
     // get all restrictions of other member and set A
+    let error = false;
     for (const r of this.members[otherIndex].element.restrictions.filter(
       (r) => r instanceof PerpendicularRestriction && r !== this
     ) as PerpendicularRestriction[]) {
-      r.setA(this.members[otherIndex].element, otherA);
+      const ret = r.setA(this.members[otherIndex].element, otherA);
+      if (ret) error = true;
     }
-    console.log('set a recursively');
-    return false;
+    return error;
   }
 }

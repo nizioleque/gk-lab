@@ -131,7 +131,6 @@ export default class Line {
 
   // return: error
   applyRestrictions(): boolean {
-    console.log('apply restrictions - line');
     // calculate current 'a'
     const currentA = this.calculateA();
     let error = false;
@@ -143,8 +142,6 @@ export default class Line {
     const lengthRestriction = this.restrictions.find(
       (r) => r instanceof LengthRestriction
     ) as LengthRestriction;
-
-    console.log(lengthRestriction);
 
     if (perpendicularRestrictions.length > 0) {
       let applyA = currentA;
@@ -160,7 +157,9 @@ export default class Line {
         // -> if 'a' is already set and incorrect, return error
         for (const r of perpendicularRestrictions) {
           const ret = r.setA(this, currentA);
-          if (ret) error = true;
+          if (ret) {
+            error = true;
+          }
         }
       }
 
@@ -182,9 +181,10 @@ export default class Line {
   }
 
   applyA(a: number) {
-    console.log('apply a', a);
-
     const length = this.length();
+    const keepFacingDown =
+      Math.abs(a) > 1 && this.points[1].y > this.points[0].y;
+    const keepFacingUp = Math.abs(a) > 1 && this.points[1].y < this.points[0].y;
 
     // calculate a, b
     const b = this.calculateB(a);
@@ -192,16 +192,22 @@ export default class Line {
     // calculate new Y of 2nd point
     const newY = a * this.points[1].x + b;
 
-    // move 2nd point
-    this.points[1].y = newY;
+    if (keepFacingDown && newY < this.points[0].y) {
+      const deltaX = this.points[1].x - this.points[0].x;
+      this.points[1].x -= 2 * deltaX;
+    } else if (keepFacingUp && newY > this.points[0].y) {
+      const deltaX = this.points[1].x - this.points[0].x;
+      this.points[1].x -= 2 * deltaX;
+    } else {
+      // move 2nd point
+      this.points[1].y = newY;
+    }
 
     // correct length
     this.applyLength(length);
   }
 
   applyLength(length: number) {
-    console.log('applyLength', length);
-
     // calculate a (proportion)
     const ratio = length / this.length();
 

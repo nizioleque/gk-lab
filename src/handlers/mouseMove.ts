@@ -69,33 +69,43 @@ export default function mouseMove(
       drawState.draggedLine.element.hover = true;
       drawState.dragStart = mousePoint;
 
-      const error = Polygon.applyRestrictions(polygons, restrictionData, [
-        drawState.draggedLine.element,
-      ]);
+      const error = Polygon.applyRestrictions(
+        polygons,
+        restrictionData,
+        drawState.draggedLine.polygon,
+        [drawState.draggedLine.element]
+      );
 
-      if (error)
+      if (error) {
         setErrorText(
           'Znaleziono sprzeczne ograniczenia - spróbuj usunąć niektóre ograniczenia'
         );
+      }
     } else if (drawState.draggedPoint) {
       // Drag one point
       drawState.draggedPoint.element.x = mousePoint.x;
       drawState.draggedPoint.element.y = mousePoint.y;
       drawState.draggedPoint.element.hover = true;
 
-      const error = Polygon.applyRestrictions(polygons, restrictionData, [
-        drawState.draggedPoint.polygon.lines.find(
-          (line) => line.points[0] === drawState.draggedPoint?.element
-        )!,
-        drawState.draggedPoint.polygon.lines.find(
-          (line) => line.points[1] === drawState.draggedPoint?.element
-        )!,
-      ]);
+      const error = Polygon.applyRestrictions(
+        polygons,
+        restrictionData,
+        drawState.draggedPoint.polygon,
+        [
+          drawState.draggedPoint.polygon.lines.find(
+            (line) => line.points[0] === drawState.draggedPoint?.element
+          )!,
+          drawState.draggedPoint.polygon.lines.find(
+            (line) => line.points[1] === drawState.draggedPoint?.element
+          )!,
+        ]
+      );
 
-      if (error)
+      if (error) {
         setErrorText(
           'Znaleziono sprzeczne ograniczenia - spróbuj usunąć niektóre ograniczenia'
         );
+      }
     } else {
       highlight();
     }

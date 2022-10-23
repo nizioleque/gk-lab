@@ -10,7 +10,6 @@ import useHoveredRestriction from './hooks/useHoveredRestriction';
 import useAddLengthRestriction from './hooks/useAddLengthRestriction';
 import useForceRerender from './hooks/useForceRerender';
 import RestrictionData from './class/RestrictionData';
-import Polygon from './class/Polygon';
 import useError from './hooks/useError';
 
 function App() {
@@ -50,11 +49,6 @@ function App() {
     const newSceneData = scene.data();
     setPolygons(newSceneData.polygons);
     setRestrictionData(newSceneData.restrictionData);
-    Polygon.applyRestrictions(
-      newSceneData.polygons,
-      newSceneData.restrictionData,
-      []
-    );
   };
 
   useEffect(() => {
@@ -85,7 +79,7 @@ function App() {
         forceRerender,
         canvasRef,
         canvasSize,
-        setErrorText
+        setErrorText,
       }}
     >
       <div className='App'>

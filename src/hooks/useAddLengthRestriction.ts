@@ -22,7 +22,14 @@ export default function useAddLengthRestriction(
       new LengthRestriction(lengthRestrictionLine, value)
     );
     if (error) setErrorText('Ta linia posiada już ograniczenie długości!');
-    else Polygon.applyRestrictions(polygons, restrictionData, []);
+    else {
+      const error = Polygon.applyRestrictions(polygons, restrictionData);
+      if (error) {
+        setErrorText(
+          'Znaleziono sprzeczne ograniczenia - spróbuj usunąć niektóre ograniczenia.'
+        );
+      }
+    }
     setLengthRestrictionLine(undefined);
   };
 
