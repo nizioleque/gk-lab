@@ -93,26 +93,81 @@ const scene2: SceneGenerator = {
 };
 
 const scene3Data = () => {
-  const point1 = new Point(600, 400);
-  const point2 = new Point(200, 700);
-  const point3 = new Point(600, 600);
+  const point1 = new Point(89, 165);
+  const point2 = new Point(251, 168);
+  const point3 = new Point(246, 482);
+  const point4 = new Point(556, 490);
+  const point5 = new Point(486, 440);
+  const point6 = new Point(487, 356);
+  const point7 = new Point(306, 351);
+  const point8 = new Point(308, 86);
+  const point9 = new Point(145, 86);
 
   const line1 = new Line(point1, point2);
   const line2 = new Line(point2, point3);
-  const line3 = new Line(point3, point1);
+  const line3 = new Line(point3, point4);
+  const line4 = new Line(point4, point5);
+  const line5 = new Line(point5, point6);
+  const line6 = new Line(point6, point7);
+  const line7 = new Line(point7, point8);
+  const line8 = new Line(point8, point9);
+  const line9 = new Line(point9, point1);
 
-  const polygon1 = new Polygon([line1, line2, line3]);
+  const polygon1 = new Polygon([
+    line1,
+    line2,
+    line3,
+    line4,
+    line5,
+    line6,
+    line7,
+    line8,
+    line9,
+  ]);
 
   const restrictionData = new RestrictionData();
   restrictionData.add(
-    new LengthRestriction({ polygon: polygon1, element: line3 }, 200)
+    new LengthRestriction({ polygon: polygon1, element: line2 }, 314)
+  );
+  restrictionData.add(
+    new LengthRestriction({ polygon: polygon1, element: line6 }, 181)
+  );
+  restrictionData.add(
+    new PerpendicularRestriction(
+      { polygon: polygon1, element: line1 },
+      { polygon: polygon1, element: line2 }
+    )
+  );
+  restrictionData.add(
+    new PerpendicularRestriction(
+      { polygon: polygon1, element: line2 },
+      { polygon: polygon1, element: line3 }
+    )
+  );
+  restrictionData.add(
+    new PerpendicularRestriction(
+      { polygon: polygon1, element: line5 },
+      { polygon: polygon1, element: line6 }
+    )
+  );
+  restrictionData.add(
+    new PerpendicularRestriction(
+      { polygon: polygon1, element: line7 },
+      { polygon: polygon1, element: line8 }
+    )
+  );
+  restrictionData.add(
+    new PerpendicularRestriction(
+      { polygon: polygon1, element: line9 },
+      { polygon: polygon1, element: line4 }
+    )
   );
 
   return { polygons: [polygon1], restrictionData };
 };
 
 const scene3: SceneGenerator = {
-  name: 'Trójkąt z jednym ograniczeniem długości',
+  name: '9-kąt – wiele prostopadłości',
   data: scene3Data,
 };
 
