@@ -1,3 +1,3 @@
-export const accentColor = '#02c2c2';
+export const accentColor = '#00dddd';
 export const lineWidth = 3;
 export const pointRadius = 5;
