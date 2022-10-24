@@ -131,7 +131,7 @@ export default class Line {
   }
 
   // return: error
-  applyRestrictions(): boolean {
+  applyRestrictions(nextLine: Line): boolean {
     // calculate current 'a'
     const currentA = this.calculateA();
     let error = false;
@@ -166,7 +166,7 @@ export default class Line {
 
       // apply 'a' (from per.rest. or calculated)
       if (Math.abs(currentA - applyA) > 0.01) {
-        this.applyA(applyA);
+        this.applyA(applyA, nextLine);
       }
     }
 
@@ -181,31 +181,41 @@ export default class Line {
     return error;
   }
 
-  applyA(a: number) {
-    const length = this.length();
-    const keepFacingDown =
-      Math.abs(a) > 1 && this.points[1].y > this.points[0].y;
-    const keepFacingUp = Math.abs(a) > 1 && this.points[1].y < this.points[0].y;
+  applyA(a: number, nextLine: Line) {
+    const nextA = nextLine.calculateA();
+    const nextB = nextLine.calculateB(nextA);
+
+    // const length = this.length();
+    // const keepFacingDown =
+    //   Math.abs(a) > 1 && this.points[1].y > this.points[0].y;
+    // const keepFacingUp = Math.abs(a) > 1 && this.points[1].y < this.points[0].y;
 
     // calculate a, b
     const b = this.calculateB(a);
 
-    // calculate new Y of 2nd point
-    const newY = a * this.points[1].x + b;
+    // find intersection point of current and next line
+    const newX = (nextB - b) / (a - nextA);
+    const newY = a * newX + b;
 
-    if (keepFacingDown && newY < this.points[0].y) {
-      const deltaX = this.points[1].x - this.points[0].x;
-      this.points[1].x -= 2 * deltaX;
-    } else if (keepFacingUp && newY > this.points[0].y) {
-      const deltaX = this.points[1].x - this.points[0].x;
-      this.points[1].x -= 2 * deltaX;
-    } else {
-      // move 2nd point
-      this.points[1].y = newY;
-    }
+    this.points[1].x = newX;
+    this.points[1].y = newY;
 
-    // correct length
-    this.applyLength(length);
+    // // calculate new Y of 2nd point
+    // const newY = a * this.points[1].x + b;
+
+    // if (keepFacingDown && newY < this.points[0].y) {
+    //   const deltaX = this.points[1].x - this.points[0].x;
+    //   this.points[1].x -= 2 * deltaX;
+    // } else if (keepFacingUp && newY > this.points[0].y) {
+    //   const deltaX = this.points[1].x - this.points[0].x;
+    //   this.points[1].x -= 2 * deltaX;
+    // } else {
+    //   // move 2nd point
+    //   this.points[1].y = newY;
+    // }
+
+    // // correct length
+    // this.applyLength(length);
   }
 
   applyLength(length: number) {

@@ -64,33 +64,39 @@ export default class Polygon {
       for (let i = 0; i < startPolygon.lines.length; i++) {
         const line =
           startPolygon.lines[(startLineIndex + i) % startPolygon.lines.length];
-        const ret = line.applyRestrictions();
+        const nextLine =
+          startPolygon.lines[
+            (startLineIndex + i + 1) % startPolygon.lines.length
+          ];
+        const ret = line.applyRestrictions(nextLine);
         if (ret) error = true;
       }
     }
 
     // apply restrictions to other polygons
     for (const polygon of otherPolygons) {
-      for (const line of polygon.lines) {
-        const ret = line.applyRestrictions();
+      for (let i = 0; i < polygon.lines.length; i++) {
+        const line = polygon.lines[i % polygon.lines.length];
+        const nextLine = polygon.lines[(i + 1) % polygon.lines.length];
+        const ret = line.applyRestrictions(nextLine);
         if (ret) error = true;
       }
     }
 
-    // now draw in the other direction
-    // reset calculated a's
-    for (const r of restrictionData.restrictions.filter(
-      (r) => r instanceof PerpendicularRestriction
-    ) as PerpendicularRestriction[]) {
-      r.a = undefined;
-    }
+    // // now draw in the other direction
+    // // reset calculated a's
+    // for (const r of restrictionData.restrictions.filter(
+    //   (r) => r instanceof PerpendicularRestriction
+    // ) as PerpendicularRestriction[]) {
+    //   r.a = undefined;
+    // }
 
-    for (let i = polygons.length - 1; i >= 0; i--) {
-      for (const line of polygons[i].lines) {
-        const ret = line.applyRestrictions();
-        if (ret) error = true;
-      }
-    }
+    // for (let i = polygons.length - 1; i >= 0; i--) {
+    //   for (const line of polygons[i].lines) {
+    //     const ret = line.applyRestrictions();
+    //     if (ret) error = true;
+    //   }
+    // }
 
     return error;
   }
