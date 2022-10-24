@@ -9,13 +9,13 @@ interface ModeButtonProps {
 }
 
 function ModeButton({ text, mode, onClick }: ModeButtonProps) {
-  const { editorMode, setEditorMode } = useContext(AppContext);
+  const { editorMode, setEditorMode, lengthInputRef } = useContext(AppContext);
 
   const index = mode !== undefined ? mode + 1 : undefined;
 
   useEffect(() => {
     function keyboardShortcut(event: KeyboardEvent) {
-      if (editorMode === EditorMode.SetLength) return;
+      if (document.activeElement === lengthInputRef.current) return;
       if (event.key === index?.toString()) {
         mode !== undefined && setEditorMode(mode);
       }
