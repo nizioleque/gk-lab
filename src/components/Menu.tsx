@@ -44,6 +44,16 @@ function Menu() {
         <h3>Narzędzia</h3>
         <div className='buttons'>
           <ModeButton text='Rysowanie' mode={EditorMode.Draw} />
+          <AnimateHeight
+            height={editorMode === EditorMode.Draw ? 'auto' : 0}
+            duration={300}
+            easing='ease-in-out'
+          >
+            <div className='menu-caption'>
+              Kliknij w dowolnym miejscu, aby zacząć rysować wielokąt. <br />
+              Kliknij ponownie na pierwszy wierzchołek, aby zakończyć rysowanie.
+            </div>
+          </AnimateHeight>
 
           <ModeButton text='Przesuwanie' mode={EditorMode.Move} />
           <AnimateHeight
