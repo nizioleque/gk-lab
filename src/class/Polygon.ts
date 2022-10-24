@@ -1,5 +1,5 @@
 import Line from './Line';
-import { PerpendicularRestriction } from './Restriction';
+import { LengthRestriction, PerpendicularRestriction } from './Restriction';
 import RestrictionData from './RestrictionData';
 
 export default class Polygon {
@@ -83,20 +83,20 @@ export default class Polygon {
       }
     }
 
-    // // now draw in the other direction
-    // // reset calculated a's
-    // for (const r of restrictionData.restrictions.filter(
-    //   (r) => r instanceof PerpendicularRestriction
-    // ) as PerpendicularRestriction[]) {
-    //   r.a = undefined;
-    // }
-
-    // for (let i = polygons.length - 1; i >= 0; i--) {
-    //   for (const line of polygons[i].lines) {
-    //     const ret = line.applyRestrictions();
-    //     if (ret) error = true;
-    //   }
-    // }
+    // apply length restrictions in reverse
+    for (let i = polygons.length - 1; i >= 0; i--) {
+      const lines = polygons[i].lines;
+      for (let j = lines.length - 1; j >= 0; j--) {
+        const lengthRestriction = lines[j].restrictions.find(
+          (r) => r instanceof LengthRestriction
+        ) as LengthRestriction;
+        if (lengthRestriction) {
+          if (Math.abs(lengthRestriction.length - lines[j].length()) > 0.01) {
+            lines[j].applyLength(lengthRestriction.length);
+          }
+        }
+      }
+    }
 
     return error;
   }

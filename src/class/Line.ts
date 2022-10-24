@@ -185,11 +185,6 @@ export default class Line {
     const nextA = nextLine.calculateA();
     const nextB = nextLine.calculateB(nextA);
 
-    // const length = this.length();
-    // const keepFacingDown =
-    //   Math.abs(a) > 1 && this.points[1].y > this.points[0].y;
-    // const keepFacingUp = Math.abs(a) > 1 && this.points[1].y < this.points[0].y;
-
     // calculate a, b
     const b = this.calculateB(a);
 
@@ -199,26 +194,9 @@ export default class Line {
 
     this.points[1].x = newX;
     this.points[1].y = newY;
-
-    // // calculate new Y of 2nd point
-    // const newY = a * this.points[1].x + b;
-
-    // if (keepFacingDown && newY < this.points[0].y) {
-    //   const deltaX = this.points[1].x - this.points[0].x;
-    //   this.points[1].x -= 2 * deltaX;
-    // } else if (keepFacingUp && newY > this.points[0].y) {
-    //   const deltaX = this.points[1].x - this.points[0].x;
-    //   this.points[1].x -= 2 * deltaX;
-    // } else {
-    //   // move 2nd point
-    //   this.points[1].y = newY;
-    // }
-
-    // // correct length
-    // this.applyLength(length);
   }
 
-  applyLength(length: number) {
+  applyLength(length: number, reverse: boolean = false) {
     // calculate a (proportion)
     const ratio = length / this.length();
 
@@ -229,12 +207,23 @@ export default class Line {
     x *= ratio;
     y *= ratio;
 
-    // add deltaX, deltaY to 1st point
-    x += this.points[0].x;
-    y += this.points[0].y;
+    if (!reverse) {
+      // add deltaX, deltaY to 1st point
+      x += this.points[0].x;
+      y += this.points[0].y;
 
-    // apply to 2nd point
-    this.points[1].x = x;
-    this.points[1].y = y;
+      // apply to 2nd point
+      this.points[1].x = x;
+      this.points[1].y = y;
+    } else {
+      x *= -1;
+      y *= -1;
+
+      x += this.points[1].x;
+      y += this.points[1].y;
+
+      this.points[0].x = x;
+      this.points[0].y = y;
+    }
   }
 }
