@@ -7,6 +7,7 @@ import RestrictionData from '../class/RestrictionData';
 import { DrawState, EditorMode, PolygonWith } from '../types';
 import {
   canClosePolygon,
+  findHoveredBezierPoint,
   findHoveredElement,
   findHoveredLines,
   findHoveredPoints,
@@ -48,6 +49,9 @@ export default function mouseDown(
     case EditorMode.SetPerpendicular:
       setPerpendicularMode();
       break;
+    case EditorMode.SetBezier:
+      setBezier();
+      break;
   }
 
   function addMode() {
@@ -88,6 +92,15 @@ export default function mouseDown(
   function moveMode() {
     const resultLines = findHoveredLines(polygons, mousePoint);
     const resultPoints = findHoveredPoints(polygons, mousePoint);
+
+    const bezierPoint = findHoveredBezierPoint(polygons, mousePoint);
+
+    if (bezierPoint) {
+      console.log('clicked bezier point!')
+      drawState.draggedBezierPoint = bezierPoint;
+      drawState.dragStart = mousePoint;
+      return;
+    }
 
     if (resultPoints.length > 0) {
       drawState.draggedPoint = resultPoints[0];
@@ -188,5 +201,13 @@ export default function mouseDown(
       }
       forceRerender();
     }
+  }
+
+  function setBezier() {
+    const hoveredElement = findHoveredElement(polygons, mousePoint, true);
+    if (!hoveredElement) return;
+
+    const hoveredLine = hoveredElement as PolygonWith<Line>;
+    hoveredLine.element.setBezier();
   }
 }

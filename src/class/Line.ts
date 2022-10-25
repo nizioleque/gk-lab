@@ -15,6 +15,17 @@ export default class Line {
   hover: boolean = false;
   restrictions: Restriction[] = [];
   checked: boolean = false;
+  isBezierCurve: boolean = false;
+  bezierPoints: [Point, Point] | undefined = undefined;
+
+  setBezier() {
+    this.isBezierCurve = true;
+    const deltaX = this.points[1].x - this.points[0].x;
+    const deltaY = this.points[1].y - this.points[0].y;
+    const p1 = new Point(deltaX / 3, deltaY / 3, this.points[0], false);
+    const p2 = new Point(deltaX / 3, deltaY / 3, this.points[1], true);
+    this.bezierPoints = [p1, p2];
+  }
 
   constructor(point1: Point, point2: Point) {
     this.points = [point1, point2];
@@ -40,33 +51,120 @@ export default class Line {
   }
 
   draw(ctx: CanvasRenderingContext2D): void {
-    if (this.hover) ctx.strokeStyle = accentColor;
-    else ctx.strokeStyle = 'black';
-    //ctx.strokeStyle = randomColor();
+    if (this.isBezierCurve) {
+      // bezier points
+      ctx.fillStyle = 'red';
+      ctx.beginPath();
+      ctx.arc(
+        this.points[0].x + this.bezierPoints![0].x,
+        this.points[0].y + this.bezierPoints![0].y,
+        6,
+        0,
+        Math.PI * 2
+      );
+      ctx.fill();
+      ctx.fillStyle = 'red';
+      ctx.beginPath();
+      ctx.arc(
+        this.points[1].x - this.bezierPoints![1].x,
+        this.points[1].y - this.bezierPoints![1].y,
+        6,
+        0,
+        Math.PI * 2
+      );
+      ctx.fill();
 
-    ctx.lineWidth = this.hover ? lineWidth + 2 : lineWidth;
+      // dashed line
+      ctx.beginPath();
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'black';
+      ctx.setLineDash([8, 8]);
+      ctx.moveTo(this.points[0].x, this.points[0].y);
+      const absolute1 = this.bezierPoints![0].absolutePosition();
+      ctx.lineTo(absolute1.x, absolute1.y);
+      const absolute2 = this.bezierPoints![1].absolutePosition();
+      ctx.lineTo(absolute2.x, absolute2.y);
+      ctx.lineTo(this.points[1].x, this.points[1].y);
+      ctx.stroke();
+
+      // draw bezier
+      this.drawBezierCurve(ctx);
+
+      // start point
+      this.points[0].draw(ctx);
+    } else {
+      if (this.hover) ctx.strokeStyle = accentColor;
+      else ctx.strokeStyle = 'black';
+      //ctx.strokeStyle = randomColor();
+
+      ctx.lineWidth = this.hover ? lineWidth + 2 : lineWidth;
+      ctx.setLineDash([]);
+      ctx.beginPath();
+      ctx.moveTo(this.points[0].x, this.points[0].y);
+      ctx.lineTo(this.points[1].x, this.points[1].y);
+      ctx.stroke();
+
+      this.points[0].draw(ctx);
+
+      const hasLengthRestriction = this.restrictions.find(
+        (r) => r instanceof LengthRestriction
+      );
+      const hasPerpendicularRestriction = this.restrictions.find(
+        (r) => r instanceof PerpendicularRestriction
+      );
+
+      if (hasLengthRestriction && hasPerpendicularRestriction) {
+        this.drawMarker(ctx, RestrictionType.Length, -10, 0, -15, 5);
+        this.drawMarker(ctx, RestrictionType.Perpendicular, 10, 0, 5, 5);
+      } else if (hasLengthRestriction) {
+        this.drawMarker(ctx, RestrictionType.Length, 0, 0, -5, 5);
+      } else if (hasPerpendicularRestriction) {
+        this.drawMarker(ctx, RestrictionType.Perpendicular, 0, 0, -5, 5);
+      }
+    }
+  }
+
+  drawBezierCurve(ctx: CanvasRenderingContext2D) {
+    const v0 = this.points[0];
+    const v1 = this.bezierPoints![0].absolutePoint();
+    const v2 = this.bezierPoints![1].absolutePoint();
+    const v3 = this.points[1];
+
+    const a0 = v0;
+    const a1 = Point.multiply(Point.subtract(v1, v0), 3);
+    const a2 = Point.multiply(
+      Point.add(Point.subtract(v2, Point.multiply(v1, 2)), v0),
+      3
+    );
+    let a3 = Point.subtract(v3, Point.multiply(v2, 3));
+    a3 = Point.add(a3, Point.multiply(v1, 3));
+    a3 = Point.subtract(a3, v0);
+
     ctx.beginPath();
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = 'blue';
+    ctx.setLineDash([]);
     ctx.moveTo(this.points[0].x, this.points[0].y);
+    for (let t = 0; t <= 1; t += 0.05) {
+      const point = Line.getBezierFuncVal(t, a0, a1, a2, a3);
+      ctx.lineTo(point.x, point.y);
+    }
     ctx.lineTo(this.points[1].x, this.points[1].y);
     ctx.stroke();
+  }
 
-    this.points[0].draw(ctx);
-
-    const hasLengthRestriction = this.restrictions.find(
-      (r) => r instanceof LengthRestriction
-    );
-    const hasPerpendicularRestriction = this.restrictions.find(
-      (r) => r instanceof PerpendicularRestriction
-    );
-
-    if (hasLengthRestriction && hasPerpendicularRestriction) {
-      this.drawMarker(ctx, RestrictionType.Length, -10, 0, -15, 5);
-      this.drawMarker(ctx, RestrictionType.Perpendicular, 10, 0, 5, 5);
-    } else if (hasLengthRestriction) {
-      this.drawMarker(ctx, RestrictionType.Length, 0, 0, -5, 5);
-    } else if (hasPerpendicularRestriction) {
-      this.drawMarker(ctx, RestrictionType.Perpendicular, 0, 0, -5, 5);
-    }
+  static getBezierFuncVal(
+    t: number,
+    a0: Point,
+    a1: Point,
+    a2: Point,
+    a3: Point
+  ): Point {
+    let res = a3;
+    res = Point.add(Point.multiply(res, t), a2);
+    res = Point.add(Point.multiply(res, t), a1);
+    res = Point.add(Point.multiply(res, t), a0);
+    return res;
   }
 
   drawMarker(

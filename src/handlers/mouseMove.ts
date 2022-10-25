@@ -33,6 +33,9 @@ export default function mouseMove(
     case EditorMode.SetPerpendicular:
       setPerpendicularMode();
       break;
+    case EditorMode.SetBezier:
+      setBezier();
+      break;
   }
 
   function addMode() {
@@ -43,6 +46,19 @@ export default function mouseMove(
   }
 
   function moveMode() {
+    if (drawState.draggedBezierPoint) {
+      let offsetX = mousePoint.x - drawState.dragStart!.x;
+      let offsetY = mousePoint.y - drawState.dragStart!.y;
+      if (drawState.draggedBezierPoint.negative) {
+        offsetX *= -1;
+        offsetY *= -1;
+      }
+      drawState.draggedBezierPoint.x += offsetX;
+      drawState.draggedBezierPoint.y += offsetY;
+      drawState.dragStart = mousePoint;
+      return;
+    }
+
     const draggedElement = drawState.draggedLine || drawState.draggedPoint;
     if (draggedElement && drawState.isShiftPressed) {
       // Drag the entire polygon
@@ -133,6 +149,10 @@ export default function mouseMove(
     if (drawState.restrictionFirstLine) {
       drawState.restrictionFirstLine.element.hover = true;
     }
+  }
+
+  function setBezier() {
+    highlight(true);
   }
 
   function highlight(edgeOnly: boolean = false) {

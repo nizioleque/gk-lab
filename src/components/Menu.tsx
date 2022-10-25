@@ -81,6 +81,8 @@ function Menu() {
 
           <ModeButton text='Podział krawędzi' mode={EditorMode.Split} />
 
+          <ModeButton text='Zamień na Beziera' mode={EditorMode.SetBezier} />
+
           <h5>Nowe ograniczenie</h5>
 
           <ModeButton text='Długość' mode={EditorMode.SetLength} />

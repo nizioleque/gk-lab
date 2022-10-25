@@ -16,6 +16,8 @@ export interface DrawState {
   isDraggingPolygon?: boolean;
 
   restrictionFirstLine?: PolygonWith<Line>;
+
+  draggedBezierPoint?: Point;
 }
 
 export enum EditorMode {
@@ -25,6 +27,7 @@ export enum EditorMode {
   Split,
   SetLength,
   SetPerpendicular,
+  SetBezier,
 }
 
 export interface PolygonWith<T> {

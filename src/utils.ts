@@ -40,6 +40,19 @@ export const findHoveredPoints = (
   return result;
 };
 
+export const findHoveredBezierPoint = (
+  polygons: Polygon[],
+  mousePoint: Point
+): Point | undefined => {
+  for (const polygon of polygons) {
+    for (const line of polygon.lines) {
+      for (const bezierPoint of line.bezierPoints ?? []) {
+        if (bezierPoint.isAt(mousePoint)) return bezierPoint;
+      }
+    }
+  }
+};
+
 export const canClosePolygon = (drawState: DrawState): boolean => {
   if (!drawState.currentPolygon) return false;
   if (drawState.currentPolygon.lines.length <= 1) return false;

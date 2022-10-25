@@ -34,6 +34,7 @@ export default function mouseUp(
     drawState.draggedLine = undefined;
     drawState.dragStart = undefined;
     drawState.isDraggingPolygon = undefined;
+    drawState.draggedBezierPoint = undefined;
   }
 
   function deleteMode() {}
