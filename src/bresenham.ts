@@ -19,36 +19,61 @@ export default function bresenham(
 
   for (const polygon of polygons) {
     for (const line of polygon.lines) {
-      calcStraightLine(ctx, line.points[0], line.points[1]);
+      plotLine(ctx, line.points[0], line.points[1]);
     }
   }
 }
 
-function calcStraightLine(
-  ctx: CanvasRenderingContext2D,
-  start: Point,
-  end: Point
-) {
-  let x1 = start.x;
-  let y1 = start.y;
-  const x2 = end.x;
-  const y2 = end.y;
-  const dx = Math.abs(x2 - x1);
-  const dy = Math.abs(y2 - y1);
-  const sx = x1 < x2 ? 1 : -1;
-  const sy = y1 < y2 ? 1 : -1;
-  let err = dx - dy;
-  ctx.fillRect(x1, y1, 1, 1);
-  while (!(x1 == x2 && y1 == y2)) {
-    var e2 = err << 1;
-    if (e2 > -dy) {
-      err -= dy;
-      x1 += sx;
+function plotLineLow(ctx: CanvasRenderingContext2D, p1: Point, p2: Point) {
+  const dX = p2.x - p1.x;
+  let dY = p2.y - p1.y;
+  let yi = 1;
+  if (dY < 0) {
+    yi *= -1;
+    dY *= -1;
+  }
+  let D = 2 * dY - dX;
+  let y = p1.y;
+
+  for (let x = p1.x; x <= p2.x; x++) {
+    ctx.fillRect(x, y, 1, 1);
+    if (D > 0) {
+      y += yi;
+      D += 2 * (dY - dX);
+    } else {
+      D += 2 * dY;
     }
-    if (e2 < dx) {
-      err += dx;
-      y1 += sy;
+  }
+}
+
+function plotLineHigh(ctx: CanvasRenderingContext2D, p1: Point, p2: Point) {
+  let dX = p2.x - p1.x;
+  const dY = p2.y - p1.y;
+  let xi = 1;
+  if (dX < 0) {
+    xi *= -1;
+    dX *= -1;
+  }
+  let D = 2 * dX - dY;
+  let x = p1.x;
+
+  for (let y = p1.y; y <= p2.y; y++) {
+    ctx.fillRect(x, y, 1, 1);
+    if (D > 0) {
+      x += xi;
+      D += 2 * (dX - dY);
+    } else {
+      D += 2 * dX;
     }
-    ctx.fillRect(x1, y1, 1, 1);
+  }
+}
+
+function plotLine(ctx: CanvasRenderingContext2D, p1: Point, p2: Point) {
+  if (Math.abs(p2.y - p1.y) < Math.abs(p2.x - p1.x)) {
+    if (p1.x > p2.x) plotLineLow(ctx, p2, p1);
+    else plotLineLow(ctx, p1, p2);
+  } else {
+    if (p1.y > p2.y) plotLineHigh(ctx, p2, p1);
+    else plotLineHigh(ctx, p1, p2);
   }
 }
